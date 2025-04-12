@@ -30,7 +30,10 @@ public class SIM {
             throw new IllegalArgumentException("Simulation does not exist");
 
         Simulation sim = (Simulation) GUID.identify(simulation.get(), Simulation.class);
-        ClientImpl client = new ClientImpl(sim.getServer(), Arrays.stream(identifiers).map(CString::get).toArray(String[]::new));
+        ClientImpl client = new ClientImpl(
+                sim.getServer(), Arrays.stream(identifiers).map(CString::get).toArray(String[]::new),
+                sim.getContext().getWorld()
+        );
         sim.getServer().connect(client);
 
         return new CInt(client.getClientId());

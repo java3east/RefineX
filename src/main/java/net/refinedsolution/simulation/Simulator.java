@@ -29,4 +29,10 @@ public interface Simulator extends Idable {
      * @return the runner for the given resource
      */
     Runner getRunner(@NotNull Resource resource);
+
+    /**
+     * Returns the world of this simulator
+     * @return the world of this simulator
+     */
+    World getWorld();
 }

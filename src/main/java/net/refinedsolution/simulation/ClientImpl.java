@@ -16,17 +16,19 @@ public class ClientImpl implements Client {
     private final int clientId;
     private final Server server;
     private final String[] identifiers;
+    private final World world;
     private final HashMap<Resource, Runner> runners = new HashMap<>();
 
     /**
      * Creates a new client object
      * @param server the server this client should be connected to
      */
-    public ClientImpl(Server server, String[] identifiers) {
+    public ClientImpl(Server server, String[] identifiers, World world) {
         this.id = GUID.identify(this);
         this.clientId = server.nextClientId();
         this.server = server;
         this.identifiers = identifiers;
+        this.world = world;
     }
 
     @Override
@@ -52,6 +54,11 @@ public class ClientImpl implements Client {
     @Override
     public Runner getRunner(@NotNull Resource resource) {
         return runners.get(resource);
+    }
+
+    @Override
+    public World getWorld() {
+        return world;
     }
 
     @Override

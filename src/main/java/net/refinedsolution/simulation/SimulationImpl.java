@@ -11,13 +11,14 @@ import java.util.Optional;
 
 public class SimulationImpl implements Simulation {
     private final long id;
-    private final Server server = new ServerImpl(this);
+    private final Server server;
     private final List<Simulator> clients = new ArrayList<>();
     private final List<Resource> resources = new ArrayList<>();
     private final SimulationContext context;
 
     public SimulationImpl(SimulationContext context) {
         this.id = GUID.identify(this);
+        this.server = new ServerImpl(this, context.getWorld());
         this.context = context;
     }
 

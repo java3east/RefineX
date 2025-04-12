@@ -20,14 +20,16 @@ public class ServerImpl implements Server {
     private final Simulation simulation;
     private int nextClientId = 1;
     private final HashMap<Resource, Runner> runners = new HashMap<>();
+    private final World world;
 
     /**
      * Creates a new server instance
      * @param simulation the simulation this simulated server belongs to
      */
-    public ServerImpl(Simulation simulation) {
+    public ServerImpl(Simulation simulation, World world) {
         this.id = GUID.identify(this);
         this.simulation = simulation;
+        this.world = world;
     }
 
     @Override
@@ -71,6 +73,11 @@ public class ServerImpl implements Server {
     @Override
     public Runner getRunner(@NotNull Resource resource) {
         return this.runners.get(resource);
+    }
+
+    @Override
+    public World getWorld() {
+        return this.world;
     }
 
     @Override
