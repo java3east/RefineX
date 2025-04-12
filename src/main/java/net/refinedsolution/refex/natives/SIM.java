@@ -3,9 +3,12 @@ package net.refinedsolution.refex.natives;
 import net.refinedsolution.lua.Runner;
 import net.refinedsolution.lua.castable.CFunction;
 import net.refinedsolution.lua.castable.CInt;
+import net.refinedsolution.lua.castable.CString;
 import net.refinedsolution.lua.nat.Native;
 import net.refinedsolution.simulation.*;
 import net.refinedsolution.util.GUID;
+
+import java.util.Arrays;
 
 /**
  * This class contains native functions related to RefineX resource simulation.
@@ -19,13 +22,16 @@ public class SIM {
     }
 
     @Native
-    public static CInt AddSimulatedClient(Runner runner, CInt simulation) {
+    public static CInt AddSimulatedClient(Runner runner, CInt simulation, CString[] identifiers) {
         if (!GUID.has(simulation.get(), Simulation.class))
             throw new IllegalArgumentException("Simulation does not exist");
 
         Simulation sim = (Simulation) GUID.identify(simulation.get(), Simulation.class);
         ClientImpl client = new ClientImpl(sim.getServer());
         sim.getServer().connect(client);
+
+        System.out.println("identifiers = " + Arrays.toString(identifiers));
+
         return new CInt(client.getClientId());
     }
 

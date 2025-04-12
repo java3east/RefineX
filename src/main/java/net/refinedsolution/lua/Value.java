@@ -154,6 +154,17 @@ public class Value {
      * @throws ClassCastException if the casting failed
      */
     public static @NotNull Object castTo(@NotNull LuaValue value, @NotNull Class<?> type) {
+        if (type.isArray()) {
+            if (!isArray(value)) throw new ClassCastException("Cannot cast " + value + " (" + value.typename() + ") to " + type);
+            LuaValue[] values = toArray(value.checktable());
+            Object[] arr = (Object[]) Array.newInstance(type.getComponentType(), values.length);
+            for (int i = 0; i < values.length; i++) {
+                if (values[i] == null) continue;
+                arr[i] = castTo(values[i], type.getComponentType());
+            }
+            return arr;
+        }
+
         if (type.isAnnotationPresent(ACastable.class)) {
             try {
                 return createObject(value, type);
