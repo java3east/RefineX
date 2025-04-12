@@ -34,11 +34,12 @@ simulation.__index = simulation
 
 ---Creates a new simulation
 ---@nodiscard
+---@param context 'FIVEM'
 ---@return simulation simulation
-function simulation:new()
+function simulation:new(context)
     local sim = {}
     setmetatable(sim, simulation)
-    sim.id = CreateSimulation()
+    sim.id = CreateSimulation(context)
     return sim
 end
 

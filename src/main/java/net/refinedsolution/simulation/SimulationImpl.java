@@ -13,9 +13,12 @@ public class SimulationImpl implements Simulation {
     private final long id;
     private final Server server = new ServerImpl(this);
     private final List<Simulator> clients = new ArrayList<>();
+    private final SimulationContext context;
 
-    public SimulationImpl() {
+    public SimulationImpl(SimulationContext context) {
         this.id = GUID.identify(this);
+        this.context = context;
+        System.out.println("Creates new '" + context + "' simulation with id " + id);
     }
 
     @Override
@@ -41,6 +44,11 @@ public class SimulationImpl implements Simulation {
     @Override
     public void load(Path path) {
 
+    }
+
+    @Override
+    public SimulationContext getContext() {
+        return context;
     }
 
     @Override

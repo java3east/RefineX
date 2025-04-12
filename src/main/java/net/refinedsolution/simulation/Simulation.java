@@ -48,4 +48,10 @@ public interface Simulation extends Idable {
      * @param path the path to load as resource.
      */
     void load(Path path);
+
+    /**
+     * Returns the context of this simulation.
+     * @return the context of this simulation
+     */
+    SimulationContext getContext();
 }

@@ -165,6 +165,16 @@ public class Value {
             return arr;
         }
 
+        if (type.isEnum()) {
+            if (value.isstring()) {
+                String name = value.checkjstring();
+                for (Object enumConstant : type.getEnumConstants()) {
+                    if (enumConstant.toString().equals(name)) return enumConstant;
+                }
+            }
+            throw new ClassCastException("Cannot cast " + value + " (" + value.typename() + ") to " + type);
+        }
+
         if (type.isAnnotationPresent(ACastable.class)) {
             try {
                 return createObject(value, type);
