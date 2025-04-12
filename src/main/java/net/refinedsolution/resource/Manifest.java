@@ -9,7 +9,7 @@ import java.util.Optional;
  * Represents a fxmanifest.lua file
  * @author Java3east
  */
-public interface Fxmanifest {
+public interface Manifest {
     /**
      * Adds the given value to the given key
      * @param key the key to add the value to

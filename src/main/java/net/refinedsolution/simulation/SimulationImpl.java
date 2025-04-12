@@ -30,11 +30,6 @@ public class SimulationImpl implements Simulation {
 
     @Override
     public @NotNull Optional<Simulator> getClient(int id) {
-        for (Simulator client : this.clients) {
-            Client c = (Client) client;
-            if (c.getIdentification().getSource() == id)
-                return Optional.of(client);
-        }
         return Optional.empty();
     }
 

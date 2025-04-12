@@ -16,9 +16,4 @@ public interface Client extends Simulator {
      */
     Server getServer();
 
-    /**
-     * Returns the identifiers for this player (including the players name)
-     * @return the players identifiers
-     */
-    Identification getIdentification();
 }

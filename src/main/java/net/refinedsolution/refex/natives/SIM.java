@@ -1,9 +1,8 @@
-package net.refinedsolution.refex;
+package net.refinedsolution.refex.natives;
 
 import net.refinedsolution.lua.Runner;
 import net.refinedsolution.lua.castable.CFunction;
 import net.refinedsolution.lua.castable.CInt;
-import net.refinedsolution.lua.castable.CList;
 import net.refinedsolution.lua.nat.Native;
 import net.refinedsolution.simulation.*;
 import net.refinedsolution.util.GUID;
@@ -20,14 +19,14 @@ public class SIM {
     }
 
     @Native
-    public static CInt AddSimulatedClient(Runner runner, CInt simulation, Identification identification) {
+    public static CInt AddSimulatedClient(Runner runner, CInt simulation) {
         if (!GUID.has(simulation.get(), Simulation.class))
             throw new IllegalArgumentException("Simulation does not exist");
 
         Simulation sim = (Simulation) GUID.identify(simulation.get(), Simulation.class);
-        ClientImpl client = new ClientImpl(sim.getServer(), identification);
+        ClientImpl client = new ClientImpl(sim.getServer());
         sim.getServer().connect(client);
-        return new CInt(client.getIdentification().getSource());
+        return new CInt(client.getClientId());
     }
 
     @Native

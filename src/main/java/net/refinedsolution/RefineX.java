@@ -1,7 +1,7 @@
 package net.refinedsolution;
 
 import net.refinedsolution.lua.RunnerImpl;
-import net.refinedsolution.refex.SIM;
+import net.refinedsolution.refex.natives.SIM;
 
 import java.io.File;
 
