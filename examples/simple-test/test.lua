@@ -1,5 +1,4 @@
 simulation:new(function(sim)
     local client = sim:connect({ "test" })
-    sim:load('examples/simple-test/')
-    sim:start('simple-test')
+    sim:loadAndStart('examples', 'simple-test')
 end, 'HELIX')

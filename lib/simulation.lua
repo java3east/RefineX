@@ -66,6 +66,15 @@ function simulation:start(name)
     StartResource(self.id, name)
 end
 
+---Loads and starts the resource with the given name in the given containing folder
+---Only works if the defined name in the manifest is the same as the folder name
+---@param path string the containing folder
+---@param name string the name of the resource
+function simulation:loadAndStart(path, name)
+    self:load(path .. "/" .. name)
+    self:start(name)
+end
+
 ---Runs the given function asynchronously
 ---@param fun fun() the function to run
 function simulation.async(fun)
