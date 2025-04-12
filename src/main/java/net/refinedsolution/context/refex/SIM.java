@@ -1,4 +1,4 @@
-package net.refinedsolution.refex.natives;
+package net.refinedsolution.context.refex;
 
 import net.refinedsolution.lua.Runner;
 import net.refinedsolution.lua.castable.CFunction;

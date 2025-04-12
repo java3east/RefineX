@@ -18,7 +18,6 @@ public class SimulationImpl implements Simulation {
     public SimulationImpl(SimulationContext context) {
         this.id = GUID.identify(this);
         this.context = context;
-        System.out.println("Creates new '" + context + "' simulation with id " + id);
     }
 
     @Override
