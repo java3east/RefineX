@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -47,6 +48,10 @@ public class ServerImpl implements Server {
     @Override
     public void connect(@NotNull Client client) {
         this.simulation.getClients().add(client);
+        System.out.println("Client " + client.getClientId() + " connected with identifiers " +
+                Arrays.toString(Arrays.stream(client.getIdentifiers()).map((str) -> "\"" + str + "\"")
+                        .toArray())
+        );
     }
 
     @Override
