@@ -33,14 +33,15 @@ simulation = {}
 simulation.__index = simulation
 
 ---Creates a new simulation
----@nodiscard
----@param context 'FIVEM'
----@return simulation simulation
-function simulation:new(context)
-    local sim = {}
-    setmetatable(sim, simulation)
-    sim.id = CreateSimulation(context)
-    return sim
+---@param cb fun(simulation: simulation)
+---@param context 'FIVEM'|'HELIX'
+function simulation:new(cb, context)
+    Async(function()
+        local sim = {}
+        setmetatable(sim, simulation)
+        sim.id = CreateSimulation(context)
+        cb(sim)
+    end)
 end
 
 ---Connects a new client with the given identifiers
@@ -51,6 +52,12 @@ function simulation:connect(identifier)
     local cl = client:new(self, identifier)
     cl:connect()
     return cl
+end
+
+---Loads the given resource
+---@param path string the path to the resource
+function simulation:load(path)
+    LoadResource(self.id, path)
 end
 
 ---Runs the given function asynchronously

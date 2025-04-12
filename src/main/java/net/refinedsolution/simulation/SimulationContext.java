@@ -1,22 +1,55 @@
 package net.refinedsolution.simulation;
 
+import net.refinedsolution.context.fivem.FivemResourceLoader;
+import net.refinedsolution.context.helix.HelixResourceLoader;
+import net.refinedsolution.resource.ResourceLoader;
+
 public enum SimulationContext {
     FIVEM(new String[] {
 
-    }),
+    }, new String[] {
+
+    }, new FivemResourceLoader()),
+
     HELIX(new String[] {
             "lib/helix/class.lua",
             "lib/helix/billboard.lua"
-    })
-    ;
+    }, new String[]{
+            "lib/helix/class.lua"
+    }, new HelixResourceLoader())
+;
 
-    private final String[] libraries;
+    private final String[] clLibraries;
+    private final String[] svLibraries;
+    private final ResourceLoader loader;
 
-    SimulationContext(String[] libraries) {
-        this.libraries = libraries;
+    SimulationContext(String[] clLibraries, String[] svLibraries, ResourceLoader loader) {
+        this.clLibraries = clLibraries;
+        this.svLibraries = svLibraries;
+        this.loader = loader;
     }
 
-    String[] getLibraries() {
-        return libraries;
+    /**
+     * Returns the client lua libraries to load
+     * @return the libraries that should be loaded on the client
+     */
+    public String[] getClientLibraries() {
+        return clLibraries;
+    }
+
+    /**
+     * Returns the server lua libraries to load
+     * @return the libraries that should be loaded on the server
+     */
+    public String[] getServerLibraries() {
+        return svLibraries;
+    }
+
+    /**
+     * Returns the resource loader for this simulation context
+     * @return the resource loader
+     */
+    public ResourceLoader getResourceLoader() {
+        return this.loader;
     }
 }

@@ -13,13 +13,16 @@ import java.util.List;
  */
 public class ResourceImpl implements Resource {
     private final Path path;
+    private final Manifest manifest;
+    private boolean started = false;
 
     /**
      * Creates a new resource from its path
      * @param path the path to the resource
      */
-    public ResourceImpl(String path) {
+    public ResourceImpl(@NotNull String path, @NotNull Manifest manifest) {
         this.path = Paths.get(path);
+        this.manifest = manifest;
     }
 
     @Override
@@ -30,5 +33,25 @@ public class ResourceImpl implements Resource {
     @Override
     public @NotNull String getName() {
         return "";
+    }
+
+    @Override
+    public @NotNull Manifest getManifest() {
+        return manifest;
+    }
+
+    @Override
+    public void start() {
+        if (this.started)
+            throw new IllegalStateException("Resource is already started");
+        this.started = true;
+
+    }
+
+    @Override
+    public void stop() {
+        if (!this.started)
+            throw new IllegalStateException("Resource is already stopped");
+        this.started = false;
     }
 }

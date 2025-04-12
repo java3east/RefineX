@@ -1,13 +1,15 @@
-package net.refinedsolution.context.refex;
+package net.refinedsolution.context.refex.natives;
 
 import net.refinedsolution.lua.Runner;
 import net.refinedsolution.lua.castable.CFunction;
 import net.refinedsolution.lua.castable.CInt;
 import net.refinedsolution.lua.castable.CString;
 import net.refinedsolution.lua.nat.Native;
+import net.refinedsolution.resource.Resource;
 import net.refinedsolution.simulation.*;
 import net.refinedsolution.util.GUID;
 
+import java.nio.file.Path;
 import java.util.Arrays;
 
 /**
@@ -31,6 +33,12 @@ public class SIM {
         sim.getServer().connect(client);
 
         return new CInt(client.getClientId());
+    }
+
+    @Native
+    public static void LoadResource(Runner runner, CInt simulation, CString path) {
+        Simulation sim = (Simulation) GUID.identify(simulation.get(), Simulation.class);
+        sim.load(Path.of(path.get()));
     }
 
     @Native

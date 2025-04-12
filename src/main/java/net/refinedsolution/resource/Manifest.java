@@ -54,4 +54,16 @@ public interface Manifest {
      * @return true if the given index is present for the given key
      */
     boolean isSet(String key, int index);
+
+    /**
+     * Loads the values for this manifest from the given path
+     * @param path the path to the manifest file
+     */
+    void load(@NotNull String path);
+
+    /**
+     * Verifies that all the required values are set correctly
+     * @return true if the manifest is valid
+     */
+    boolean verify();
 }

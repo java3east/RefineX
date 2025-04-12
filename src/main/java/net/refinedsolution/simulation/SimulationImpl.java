@@ -42,7 +42,7 @@ public class SimulationImpl implements Simulation {
 
     @Override
     public void load(Path path) {
-
+        this.context.getResourceLoader().load(path.toString());
     }
 
     @Override

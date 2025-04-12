@@ -1,0 +1,1 @@
+print("this should show on both client and server!")
