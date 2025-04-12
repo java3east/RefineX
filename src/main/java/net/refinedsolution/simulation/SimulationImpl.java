@@ -1,5 +1,6 @@
 package net.refinedsolution.simulation;
 
+import net.refinedsolution.lua.Runner;
 import net.refinedsolution.resource.Resource;
 import net.refinedsolution.util.GUID;
 import org.jetbrains.annotations.NotNull;
@@ -13,6 +14,7 @@ public class SimulationImpl implements Simulation {
     private final long id;
     private final Server server = new ServerImpl(this);
     private final List<Simulator> clients = new ArrayList<>();
+    private final List<Resource> resources = new ArrayList<>();
     private final SimulationContext context;
 
     public SimulationImpl(SimulationContext context) {
@@ -42,7 +44,27 @@ public class SimulationImpl implements Simulation {
 
     @Override
     public void load(Path path) {
-        this.context.getResourceLoader().load(path.toString());
+        Resource resource = this.context.getResourceLoader().load(path.toString());
+        this.resources.add(resource);
+    }
+
+    @Override
+    public void start(String name) {
+        Optional<Resource> resource = Optional.empty();
+        for (Resource res : this.resources) {
+            System.out.println("found resource: " + res.getName());
+            if (res.getName().equals(name)) {
+                resource = Optional.of(res);
+                break;
+            }
+        }
+        if (resource.isEmpty())
+            throw new IllegalArgumentException("Resource not found: " + name);
+
+        this.context.getResourceLoader().start(this.server, resource.get());
+        for (Simulator client : this.clients) {
+            this.context.getResourceLoader().start(client, resource.get());
+        }
     }
 
     @Override

@@ -18,6 +18,5 @@ public class FivemResourceLoader implements ResourceLoader {
 
     @Override
     public void start(@NotNull Simulator simulator, @NotNull Resource resource) {
-        resource.start();
     }
 }

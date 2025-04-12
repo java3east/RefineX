@@ -60,6 +60,12 @@ function simulation:load(path)
     LoadResource(self.id, path)
 end
 
+---Starts the resource with the given name
+---@param name string the name of the resource
+function simulation:start(name)
+    StartResource(self.id, name)
+end
+
 ---Runs the given function asynchronously
 ---@param fun fun() the function to run
 function simulation.async(fun)

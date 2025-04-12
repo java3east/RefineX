@@ -1,11 +1,14 @@
 package net.refinedsolution.simulation;
 
+import net.refinedsolution.lua.Runner;
+import net.refinedsolution.resource.Resource;
 import net.refinedsolution.util.GUID;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -16,6 +19,7 @@ public class ServerImpl implements Server {
     private final long id;
     private final Simulation simulation;
     private int nextClientId = 1;
+    private final HashMap<Resource, Runner> runners = new HashMap<>();
 
     /**
      * Creates a new server instance
@@ -57,6 +61,16 @@ public class ServerImpl implements Server {
     @Override
     public @NotNull Simulation getSimulation() {
         return this.simulation;
+    }
+
+    @Override
+    public void addResource(@NotNull Resource resource, @NotNull Runner runner) {
+        this.runners.put(resource, runner);
+    }
+
+    @Override
+    public Runner getRunner(@NotNull Resource resource) {
+        return this.runners.get(resource);
     }
 
     @Override

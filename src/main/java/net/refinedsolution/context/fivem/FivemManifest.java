@@ -46,4 +46,9 @@ public class FivemManifest implements Manifest {
     public boolean verify() {
         return false;
     }
+
+    @Override
+    public @NotNull Optional<String> getName() {
+        return Optional.empty();
+    }
 }

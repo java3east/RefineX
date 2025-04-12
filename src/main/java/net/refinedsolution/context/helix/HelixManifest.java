@@ -79,4 +79,9 @@ public class HelixManifest implements Manifest {
 
         return ok;
     }
+
+    @Override
+    public @NotNull Optional<String> getName() {
+        return getMeta("title", 0);
+    }
 }

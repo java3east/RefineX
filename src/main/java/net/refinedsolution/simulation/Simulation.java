@@ -50,6 +50,14 @@ public interface Simulation extends Idable {
     void load(Path path);
 
     /**
+     * Starts the resource with the given name.
+     * @param name the name of the resource to start
+     *
+     * @throws IllegalArgumentException if the resource with the given name doesn't exist
+     */
+    void start(String name);
+
+    /**
      * Returns the context of this simulation.
      * @return the context of this simulation
      */

@@ -66,4 +66,10 @@ public interface Manifest {
      * @return true if the manifest is valid
      */
     boolean verify();
+
+    /**
+     * Returns the registered name for this resource
+     * @return the name of the resource
+     */
+    @NotNull Optional<String> getName();
 }

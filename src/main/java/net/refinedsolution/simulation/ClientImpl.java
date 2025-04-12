@@ -1,7 +1,11 @@
 package net.refinedsolution.simulation;
 
+import net.refinedsolution.lua.Runner;
+import net.refinedsolution.resource.Resource;
 import net.refinedsolution.util.GUID;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
 
 /**
  * A simple client implementation
@@ -12,6 +16,7 @@ public class ClientImpl implements Client {
     private final int clientId;
     private final Server server;
     private final String[] identifiers;
+    private final HashMap<Resource, Runner> runners = new HashMap<>();
 
     /**
      * Creates a new client object
@@ -37,6 +42,16 @@ public class ClientImpl implements Client {
     @Override
     public @NotNull Simulation getSimulation() {
         return this.server.getSimulation();
+    }
+
+    @Override
+    public void addResource(@NotNull Resource resource, @NotNull Runner runner) {
+        runners.put(resource, runner);
+    }
+
+    @Override
+    public Runner getRunner(@NotNull Resource resource) {
+        return runners.get(resource);
     }
 
     @Override

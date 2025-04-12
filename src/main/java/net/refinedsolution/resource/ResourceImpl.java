@@ -6,6 +6,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * A default Resource implementation
@@ -32,26 +33,12 @@ public class ResourceImpl implements Resource {
 
     @Override
     public @NotNull String getName() {
-        return "";
+        Optional<String> name = this.manifest.getName();
+        return name.orElseGet(() -> this.path.getFileName().toString());
     }
 
     @Override
     public @NotNull Manifest getManifest() {
         return manifest;
-    }
-
-    @Override
-    public void start() {
-        if (this.started)
-            throw new IllegalStateException("Resource is already started");
-        this.started = true;
-
-    }
-
-    @Override
-    public void stop() {
-        if (!this.started)
-            throw new IllegalStateException("Resource is already stopped");
-        this.started = false;
     }
 }

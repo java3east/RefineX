@@ -26,16 +26,4 @@ public interface Resource {
      * @return the manifest of this resource
      */
     @NotNull Manifest getManifest();
-
-    /**
-     * Sets the resource state to started
-     * @throws IllegalStateException if the resource is already started
-     */
-    void start();
-
-    /**
-     * Sets the resource state to stopped
-     * @throws IllegalStateException if the resource is already stopped
-     */
-    void stop();
 }

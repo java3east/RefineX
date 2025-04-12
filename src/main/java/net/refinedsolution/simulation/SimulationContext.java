@@ -12,10 +12,10 @@ public enum SimulationContext {
     }, new FivemResourceLoader()),
 
     HELIX(new String[] {
-            "lib/helix/class.lua",
-            "lib/helix/billboard.lua"
+            "lib/helix/client/class.lua",
+            "lib/helix/client/billboard.lua"
     }, new String[]{
-            "lib/helix/class.lua"
+            "lib/helix/server/class.lua"
     }, new HelixResourceLoader())
 ;
 

@@ -8,6 +8,7 @@ import net.refinedsolution.lua.nat.Native;
 import net.refinedsolution.resource.Resource;
 import net.refinedsolution.simulation.*;
 import net.refinedsolution.util.GUID;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -39,6 +40,12 @@ public class SIM {
     public static void LoadResource(Runner runner, CInt simulation, CString path) {
         Simulation sim = (Simulation) GUID.identify(simulation.get(), Simulation.class);
         sim.load(Path.of(path.get()));
+    }
+
+    @Native
+    public static void StartResource(Runner runner, CInt simulation, CString name) {
+        Simulation sim = (Simulation) GUID.identify(simulation.get(), Simulation.class);
+        sim.start(name.get());
     }
 
     @Native
