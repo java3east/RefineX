@@ -15,8 +15,6 @@ import java.util.Optional;
 public class ResourceImpl implements Resource {
     private final Path path;
     private final Manifest manifest;
-    private boolean started = false;
-
     /**
      * Creates a new resource from its path
      * @param path the path to the resource

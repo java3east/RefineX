@@ -3,6 +3,7 @@ package net.refinedsolution.lua;
 import net.refinedsolution.lua.nat.Call;
 import net.refinedsolution.lua.nat.Exists;
 import net.refinedsolution.lua.nat.NativeReference;
+import net.refinedsolution.simulation.Simulator;
 import net.refinedsolution.util.GUID;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -14,6 +15,7 @@ import org.luaj.vm2.lib.jse.JsePlatform;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class RunnerImpl implements Runner {
 
@@ -21,6 +23,7 @@ public class RunnerImpl implements Runner {
     private final Globals globals;
     private final File directory;
     private final List<Class<?>> namespaces = new ArrayList<>();
+    private final Optional<Simulator> simulator;
 
     /**
      * Creates a new default runner.
@@ -32,6 +35,17 @@ public class RunnerImpl implements Runner {
         this.globals.set("REFX_FIND", new Exists());
         this.globals.set("REFX_CALL", new Call());
         this.directory = new File(System.getProperty("user.dir"));
+        this.simulator = Optional.empty();
+    }
+
+    public RunnerImpl(@NotNull Simulator simulator) {
+        this.id = GUID.identify(this);
+        this.globals = JsePlatform.debugGlobals();
+        this.globals.set("REFX_ID", this.id);
+        this.globals.set("REFX_FIND", new Exists());
+        this.globals.set("REFX_CALL", new Call());
+        this.directory = new File(System.getProperty("user.dir"));
+        this.simulator = Optional.of(simulator);
     }
 
     /**
@@ -79,5 +93,10 @@ public class RunnerImpl implements Runner {
             vals[i] = varargs.arg(i + 1);
         }
         return NativeReference.call(this, mName, vals);
+    }
+
+    @Override
+    public Optional<Simulator> getSimulator() {
+        return this.simulator;
     }
 }

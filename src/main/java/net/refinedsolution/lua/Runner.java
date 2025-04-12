@@ -1,5 +1,6 @@
 package net.refinedsolution.lua;
 
+import net.refinedsolution.simulation.Simulator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.luaj.vm2.Globals;
@@ -8,6 +9,7 @@ import org.luaj.vm2.Varargs;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * A runner can execute Lua code. It also contains a working directory and an uniq identifying id.
@@ -59,4 +61,10 @@ public interface Runner {
      * @return the return parameter of the method
      */
     @NotNull LuaValue call(@Nullable Object o, @NotNull String mName, @NotNull Varargs varargs);
+
+    /**
+     * Returns the simulator this runner is running in.
+     * @return the simulator this runner is running in
+     */
+    Optional<Simulator> getSimulator();
 }

@@ -1,6 +1,5 @@
 package net.refinedsolution.simulation;
 
-import net.refinedsolution.lua.Runner;
 import net.refinedsolution.resource.Resource;
 import net.refinedsolution.util.GUID;
 import org.jetbrains.annotations.NotNull;
@@ -52,7 +51,6 @@ public class SimulationImpl implements Simulation {
     public void start(String name) {
         Optional<Resource> resource = Optional.empty();
         for (Resource res : this.resources) {
-            System.out.println("found resource: " + res.getName());
             if (res.getName().equals(name)) {
                 resource = Optional.of(res);
                 break;
