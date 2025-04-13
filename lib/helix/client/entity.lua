@@ -11,6 +11,9 @@ function Entity:new(localId, netId)
     self.netId = netId
 end
 
+---Returns all the entities in the world.
+---@nodiscard
+---@return Entity[] entities the entities in the world
 function Entity.GetAll()
     local data = GetAllEntities()
     local entities = {}
@@ -21,6 +24,21 @@ function Entity.GetAll()
     end
 
     return entities
+end
+
+---Returns the entity at the given index.
+---@nodiscard
+---@param index number the index of the entity
+---@return Entity? entity the entity at the given index
+function Entity.GetByIndex(index)
+    return Entity.GetAll()[index]
+end
+
+---Returns the amount of entities that exist in the world.
+---@nodiscard
+---@return integer count the amount of entities
+function Entity.GetCount()
+    return #Entity.GetAll()
 end
 
 ---Returns the network id of the entity.

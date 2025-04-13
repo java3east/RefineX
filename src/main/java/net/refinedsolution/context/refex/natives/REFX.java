@@ -5,6 +5,7 @@ import net.refinedsolution.lua.castable.CString;
 import net.refinedsolution.lua.nat.Native;
 import net.refinedsolution.simulation.Client;
 import net.refinedsolution.util.Color;
+import net.refinedsolution.util.StringUtils;
 
 public class REFX {
     @Native
@@ -16,11 +17,14 @@ public class REFX {
 
         String simName = runner.getSimulator().isPresent() ?
                 (
-                        (runner.getSimulator().get() instanceof Client client) ?
-                                "CLIENT:" + client.getClientId() : "SERVER"
+                        "[SIMULATION:" + runner.getSimulator().get().getSimulation().getId() + "] [" +
+                        ((runner.getSimulator().get() instanceof Client client) ?
+                                "CLIENT:" + client.getClientId() : "SERVER") + "]"
                 ) : "RefineX";
 
-        System.out.println(Color.WHITE.ascii() + "[" + Color.BLUE.ascii() +  "INFO" + Color.WHITE.ascii() + "] ["
-                + Color.BLUE.ascii() + simName + Color.WHITE.ascii() + "] " + Color.RESET.ascii() + sb.toString().trim());
+        simName = StringUtils.fixedXLength(simName, 4);
+
+        System.out.println(Color.WHITE.ascii() + "[" + Color.BLUE.ascii() +  "INFO" + Color.WHITE.ascii() + "] "
+                + simName + " " + Color.RESET.ascii() + sb.toString().trim());
     }
 }
