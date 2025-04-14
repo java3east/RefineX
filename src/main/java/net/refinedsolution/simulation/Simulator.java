@@ -35,4 +35,10 @@ public interface Simulator extends Idable {
      * @return the world of this simulator
      */
     World getWorld();
+
+    /**
+     * Sends this event to all Runners of this simulator
+     * @param event the event to send
+     */
+    void dispatchEvent(@NotNull Event event);
 }

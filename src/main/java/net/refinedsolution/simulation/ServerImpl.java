@@ -1,10 +1,12 @@
 package net.refinedsolution.simulation;
 
 import net.refinedsolution.lua.Runner;
+import net.refinedsolution.lua.Value;
 import net.refinedsolution.resource.Resource;
 import net.refinedsolution.util.GUID;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.luaj.vm2.LuaValue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -78,6 +80,14 @@ public class ServerImpl implements Server {
     @Override
     public World getWorld() {
         return this.world;
+    }
+
+    @Override
+    public void dispatchEvent(@NotNull Event event) {
+        LuaValue val = Value.of(event);
+        for (Runner runner : runners.values()) {
+            runner.getGlobals().get("REFX_DISPATCH_EVENT").call(Value.of(val));
+        }
     }
 
     @Override
