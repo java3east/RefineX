@@ -17,21 +17,24 @@ public interface Event {
      * @param name the name of this event
      */
     @ACastable.Field(name = "name")
-    void setName(@NotNull CString name);
+    Event setName(@NotNull CString name);
+    Event setName(@NotNull String name);
 
     /**
      * Marks / unmarks this event as a network event
      * @param networked true if the event should be a network event
      */
     @ACastable.Field(name = "isNet")
-    void setNetworked(@NotNull CBool networked);
+    Event setNetworked(@NotNull CBool networked);
+    Event setNetworked(boolean networked);
 
     /**
      * The source of this network event (-1 for server)
      * @param source the source of this event
      */
     @ACastable.Field(name = "source")
-    void setSource(@NotNull CInt source);
+    Event setSource(@NotNull CInt source);
+    Event setSource(int source);
 
     /**
      * Sets the destination of this event.
@@ -39,29 +42,22 @@ public interface Event {
      * @param destination the id of the client (-1 for all clients)
      */
     @ACastable.Field(name = "destination")
-    void setDestination(@NotNull CInt destination);
+    Event setDestination(@NotNull CInt destination);
+    Event setDestination(int destination);
 
     /**
-     * Sets a data value of this event
-     * @param key the key to set the value for
-     * @param value the value to set
+     * Sets the event call parameters
+     * @param data the parameters of this event
      */
-    void set(@NotNull CCastable<?> key, @NotNull CCastable<?> value);
+    @ACastable.Field(name = "data")
+    Event setData(@NotNull CCastable<?>[] data);
 
     /**
-     * Returns the value for the given key
-     * @param key the key to get the value for
-     * @return the value
+     * Returns the event call parameters
+     * @return the parameters of this event
      */
-    @NotNull Optional<CCastable<?>> get(@NotNull CCastable<?> key);
-
-    /**
-     * Returns the value for the given key, if it doesn't exist the default value will be returned
-     * @param key the key to get the value for
-     * @param value the fallback value
-     * @return the value or the fallback value
-     */
-    @NotNull CCastable<?> get(@NotNull CCastable<?> key, @NotNull CCastable<?> value);
+    @ACastable.PackField(name = "data")
+    CCastable<?>[] getData();
 
     /**
      * Returns the set name of this event

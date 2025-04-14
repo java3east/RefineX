@@ -1,6 +1,7 @@
 package net.refinedsolution.simulation;
 
 import net.refinedsolution.lua.Runner;
+import net.refinedsolution.lua.Value;
 import net.refinedsolution.resource.Resource;
 import net.refinedsolution.util.GUID;
 import org.jetbrains.annotations.NotNull;
@@ -59,6 +60,13 @@ public class ClientImpl implements Client {
     @Override
     public World getWorld() {
         return world;
+    }
+
+    @Override
+    public void dispatchEvent(@NotNull Event event) {
+        for (Runner runner : runners.values()) {
+            runner.getGlobals().get("REFX_DISPATCH_EVENT").call(Value.of(event));
+        }
     }
 
     @Override

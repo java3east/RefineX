@@ -14,11 +14,13 @@ public enum SimulationContext {
     }, new FivemResourceLoader(), new FivemWorld(null)),
 
     HELIX(new String[] {
+            "lib/helix/event.lua",
             "lib/helix/eventmanager.lua",
             "lib/helix/client/class.lua",
             "lib/helix/client/entity.lua",
             "lib/helix/client/billboard.lua",
     }, new String[] {
+            "lib/helix/event.lua",
             "lib/helix/eventmanager.lua",
             "lib/helix/server/class.lua"
     }, new HelixResourceLoader(), new HelixWorld(null))
