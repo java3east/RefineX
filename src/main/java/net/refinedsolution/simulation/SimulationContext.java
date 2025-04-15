@@ -31,6 +31,13 @@ public enum SimulationContext {
     private final ResourceLoader loader;
     private final World world;
 
+    /**
+     * Simulation context
+     * @param clLibraries paths to client side scripts to load
+     * @param svLibraries paths to server side scripts to load
+     * @param loader the resource loader to use with this context
+     * @param world the world to use for this context
+     */
     SimulationContext(String[] clLibraries, String[] svLibraries, ResourceLoader loader, World world) {
         this.clLibraries = clLibraries;
         this.svLibraries = svLibraries;
