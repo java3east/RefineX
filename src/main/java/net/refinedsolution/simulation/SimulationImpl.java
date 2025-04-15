@@ -63,6 +63,7 @@ public class SimulationImpl implements Simulation {
         this.context.getResourceLoader().start(this.server, resource.get());
         for (Simulator client : this.clients) {
             this.context.getResourceLoader().start(client, resource.get());
+            client.dispatchEvent(new EventImpl().setName("test"));
         }
     }
 
