@@ -1,12 +1,18 @@
 package net.refinedsolution.lua.castable;
 
 import net.refinedsolution.lua.ACastable;
+import net.refinedsolution.lua.Value;
 import org.jetbrains.annotations.NotNull;
+import org.luaj.vm2.LuaBoolean;
 import org.luaj.vm2.LuaFunction;
 import org.luaj.vm2.LuaValue;
 
-@ACastable(isDirect = true)
+@ACastable(isDirect = true, castType = LuaFunction.class)
 public class CFunction extends CCastable<LuaFunction> {
+    {{
+        Value.castables.put(LuaFunction.class, CFunction.class);
+    }}
+
     @ACastable.Direct
     public CFunction(@NotNull LuaValue value) {
         super(value);

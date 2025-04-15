@@ -1,11 +1,18 @@
 package net.refinedsolution.lua.castable;
 
 import net.refinedsolution.lua.ACastable;
+import net.refinedsolution.lua.Value;
 import org.jetbrains.annotations.NotNull;
+import org.luaj.vm2.LuaBoolean;
 import org.luaj.vm2.LuaValue;
 
-@ACastable(isDirect = true)
+@ACastable(isDirect = true, castType = LuaBoolean.class)
 public class CBool extends CCastable<Boolean> {
+
+    {{
+        Value.castables.put(LuaBoolean.class, CBool.class);
+    }}
+
     @ACastable.Direct
     public CBool(@NotNull LuaValue value) {
         super(value);

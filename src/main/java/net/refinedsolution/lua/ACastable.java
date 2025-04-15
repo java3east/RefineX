@@ -1,5 +1,8 @@
 package net.refinedsolution.lua;
 
+import org.luaj.vm2.LuaNil;
+import org.luaj.vm2.LuaValue;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -9,6 +12,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ACastable {
     boolean isDirect() default false;
+    Class<? extends LuaValue> castType() default LuaNil.class;
 
     @Target(ElementType.METHOD)
     @Retention(RetentionPolicy.RUNTIME)

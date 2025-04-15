@@ -21,9 +21,10 @@ public interface Simulation extends Idable {
 
     /**
      * Returns all the clients of this simulation
+     *
      * @return the clients of this simulation
      */
-    @NotNull List<Simulator> getClients();
+    List<Client> getClients();
 
     /**
      * Returns the client that has the given client id.

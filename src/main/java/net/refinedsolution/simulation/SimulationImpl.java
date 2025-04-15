@@ -12,7 +12,7 @@ import java.util.Optional;
 public class SimulationImpl implements Simulation {
     private final long id;
     private final Server server;
-    private final List<Simulator> clients = new ArrayList<>();
+    private final List<Client> clients = new ArrayList<>();
     private final List<Resource> resources = new ArrayList<>();
     private final SimulationContext context;
 
@@ -28,12 +28,17 @@ public class SimulationImpl implements Simulation {
     }
 
     @Override
-    public @NotNull List<Simulator> getClients() {
+    public List<Client> getClients() {
         return clients;
     }
 
     @Override
     public @NotNull Optional<Simulator> getClient(int id) {
+        for (Client client : this.clients) {
+            if (client.getClientId() == id) {
+                return Optional.of(client);
+            }
+        }
         return Optional.empty();
     }
 
@@ -63,7 +68,6 @@ public class SimulationImpl implements Simulation {
         this.context.getResourceLoader().start(this.server, resource.get());
         for (Simulator client : this.clients) {
             this.context.getResourceLoader().start(client, resource.get());
-            client.dispatchEvent(new EventImpl().setName("test"));
         }
     }
 

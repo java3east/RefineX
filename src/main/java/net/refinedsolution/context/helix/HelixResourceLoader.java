@@ -1,8 +1,10 @@
 package net.refinedsolution.context.helix;
 
+import net.refinedsolution.context.helix.natives.EVENT;
 import net.refinedsolution.context.refex.natives.REFX;
 import net.refinedsolution.lua.Runner;
 import net.refinedsolution.lua.RunnerImpl;
+import net.refinedsolution.lua.castable.CInt;
 import net.refinedsolution.resource.Resource;
 import net.refinedsolution.resource.ResourceImpl;
 import net.refinedsolution.resource.ResourceLoader;
@@ -23,7 +25,9 @@ public class HelixResourceLoader implements ResourceLoader {
     @Override
     public void start(@NotNull Simulator simulator, @NotNull Resource resource) {
         RunnerImpl runner = new RunnerImpl(simulator);
+        simulator.addResource(resource, runner);
         runner.addNamespace(REFX.class);
+        runner.addNamespace(EVENT.class);
         String[] libraries;
         boolean isClient = false;
         if (simulator instanceof Client) {
@@ -41,11 +45,17 @@ public class HelixResourceLoader implements ResourceLoader {
         String path = "/Server/Index.lua";
         if (isClient) path = "/Client/Index.lua";
 
+        CInt clId = new CInt(-1);
+        if (simulator instanceof Client client) {
+            clId = new CInt(client.getClientId());
+        }
+
+        runner.getGlobals().set("REFX_CLIENT_ID", clId.lua());
+
         runner.loadFile("lib/override.lua");
         runner.loadFile("lib/native.lua");
         runner.loadFile(resource.getLocation().getPath() + "/Shared/Index.lua");
         runner.loadFile(resource.getLocation().getPath() + path);
 
-        simulator.addResource(resource, runner);
     }
 }

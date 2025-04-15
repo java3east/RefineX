@@ -1,5 +1,6 @@
 package net.refinedsolution.lua;
 
+import net.refinedsolution.lua.castable.CCastable;
 import org.jetbrains.annotations.NotNull;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
@@ -11,6 +12,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +21,8 @@ import java.util.Map;
  * @author Java3east
  */
 public class Value {
+    public static final HashMap<Class<? extends LuaValue>, Class<? extends CCastable<?>>> castables = new HashMap<>();
+
     /**
      * Converts an object into a LuaValue
      * @param object the object to convert
@@ -123,6 +127,10 @@ public class Value {
      */
     private static @NotNull Object createObject(@NotNull LuaValue value, Class<?> clazz)
             throws InstantiationException, IllegalAccessException, InvocationTargetException {
+        if (clazz == CCastable.class) {
+            clazz = castables.getOrDefault(value.getClass(), (Class<? extends CCastable<?>>) clazz);
+        }
+
         for (Constructor<?> constructor : clazz.getConstructors()) {
             if (constructor.isAnnotationPresent(ACastable.Direct.class)) {
                 return constructor.newInstance(value);
@@ -155,6 +163,7 @@ public class Value {
      */
     public static @NotNull Object castTo(@NotNull LuaValue value, @NotNull Class<?> type) {
         if (type.isArray()) {
+            if (value.isnil()) return Array.newInstance(type.getComponentType(), 0);
             if (!isArray(value)) throw new ClassCastException("Cannot cast " + value + " (" + value.typename() + ") to " + type);
             LuaValue[] values = toArray(value.checktable());
             Object[] arr = (Object[]) Array.newInstance(type.getComponentType(), values.length);
@@ -179,7 +188,7 @@ public class Value {
             try {
                 return createObject(value, type);
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                throw new ClassCastException("Unable to cast " + type + "(" + value.typename() + ") to " + value + ": " + e.getMessage());
+                throw new ClassCastException("Unable to cast '" + value + "'(" + value.typename() + ") to " + type + ": " + e.getMessage());
             }
         }
         else if (type.isInstance(value)) return value;

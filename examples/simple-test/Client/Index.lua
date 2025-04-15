@@ -1,5 +1,6 @@
 print("hello from client!")
 
-Event.SubscribeRemote("test", function (...)
-    print("event received", ...)
+Events.SubscribeRemote("test", function (msg)
+    print("server said", msg)
 end)
+Events.CallRemote('test')
