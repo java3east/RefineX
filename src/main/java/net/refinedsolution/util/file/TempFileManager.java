@@ -15,7 +15,12 @@ import java.util.function.Function;
  * @author Java3east
  */
 public class TempFileManager {
-    public static Optional<String> fromFile(@NotNull String path, Function<String, String> modifier) {
+    public static interface ModifierFunction {
+        public ModifierFunction identity = (s, file) -> s;
+        String modify(String s, String file);
+    }
+
+    public static Optional<String> fromFile(@NotNull String path, ModifierFunction modifier) {
         File file = new File(path);
         if (!file.exists())
             throw new IllegalArgumentException("File does not exist: " + path);
@@ -30,7 +35,7 @@ public class TempFileManager {
             }
             scanner.close();
 
-            String cont = modifier.apply(content.toString());
+            String cont = modifier.modify(content.toString(), file.getAbsolutePath());
 
             String userDir = System.getProperty("user.dir");
             String tempPath = userDir + "/temp/";
@@ -56,6 +61,6 @@ public class TempFileManager {
     }
 
     public static Optional<String> fromFile(@NotNull String path) {
-        return fromFile(path, Function.identity());
+        return fromFile(path, ModifierFunction.identity);
     }
 }

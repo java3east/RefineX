@@ -5,6 +5,13 @@
 test = {}
 test.__index = test
 
+---If true will place markers at each function,
+---checking if each function has been called.
+---@param enabled any
+function test.setMarkersEnabled(enabled)
+    RefxSetMarkersEnabled(enabled)
+end
+
 ---Creates a new test object.
 ---@param cb fun(test: test, simulation: simulation)
 ---@param name string
