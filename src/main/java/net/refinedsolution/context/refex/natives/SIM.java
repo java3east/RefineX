@@ -19,8 +19,8 @@ import java.util.Arrays;
  */
 public class SIM {
     @Native
-    public static CInt CreateSimulation(Runner runner, SimulationContext context) {
-        SimulationImpl sim = new SimulationImpl(context);
+    public static CInt CreateSimulation(Runner runner, SimulationContext context, CString name) {
+        SimulationImpl sim = new SimulationImpl(context, name.get());
         return new CInt((int) sim.getId());
     }
 

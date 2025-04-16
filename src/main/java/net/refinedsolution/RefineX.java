@@ -27,6 +27,7 @@ public class RefineX {
         runner.addNamespace(SIM.class);
         runner.loadFile("./lib/native.lua");
         runner.loadFile("./lib/simulation.lua");
+        runner.loadFile("./lib/test.lua");
         runner.loadFile(path);
     }
 }

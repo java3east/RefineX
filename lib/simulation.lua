@@ -35,11 +35,12 @@ simulation.__index = simulation
 ---Creates a new simulation
 ---@param cb fun(simulation: simulation)
 ---@param context 'FIVEM'|'HELIX'
-function simulation:new(cb, context)
+---@param name string the name of the simulation
+function simulation:new(cb, context, name)
     Async(function()
         local sim = {}
         setmetatable(sim, simulation)
-        sim.id = CreateSimulation(context)
+        sim.id = CreateSimulation(context, name)
         cb(sim)
     end)
 end

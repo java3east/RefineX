@@ -63,4 +63,10 @@ public interface Simulation extends Idable {
      * @return the context of this simulation
      */
     SimulationContext getContext();
+
+    /**
+     * Returns the name of this simulation.
+     * @return the name of this simulation
+     */
+    @NotNull String getName();
 }

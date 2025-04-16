@@ -17,7 +17,7 @@ public class REFX {
 
         String simName = runner.getSimulator().isPresent() ?
                 (
-                        "[SIMULATION:" + runner.getSimulator().get().getSimulation().getId() + "] [" +
+                        "[" + runner.getSimulator().get().getSimulation().getName() + "] [" +
                         ((runner.getSimulator().get() instanceof Client client) ?
                                 "CLIENT:" + client.getClientId() : "SERVER") + "]"
                 ) : "RefineX";

@@ -15,11 +15,17 @@ public class SimulationImpl implements Simulation {
     private final List<Client> clients = new ArrayList<>();
     private final List<Resource> resources = new ArrayList<>();
     private final SimulationContext context;
+    private final String name;
 
-    public SimulationImpl(SimulationContext context) {
+    public SimulationImpl(SimulationContext context, String name) {
         this.id = GUID.identify(this);
         this.server = new ServerImpl(this, context.getWorld());
         this.context = context;
+        this.name = name;
+    }
+
+    public SimulationImpl(SimulationContext context) {
+        this(context, "Simulation");
     }
 
     @Override
@@ -74,6 +80,11 @@ public class SimulationImpl implements Simulation {
     @Override
     public SimulationContext getContext() {
         return context;
+    }
+
+    @Override
+    public @NotNull String getName() {
+        return this.name;
     }
 
     @Override
