@@ -112,6 +112,7 @@ public class SimulationImpl implements Simulation, IssueLog, IssueLogger {
     public void log(@NotNull Issue issue) {
         this.issues.add(issue);
         RefineX.manager.log(issue);
+        System.out.println(issue);
     }
 
     @Override

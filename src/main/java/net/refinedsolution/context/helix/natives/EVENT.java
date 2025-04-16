@@ -45,15 +45,18 @@ public class EVENT {
         }
 
         if (!ok) {
-            LuaTable info = (LuaTable) runner.getGlobals().get("debug").get("info")
-                    .call(Value.of(1), Value.of("Sl"));
+            LuaTable info = (LuaTable) runner.getGlobals().get("debug").get("getinfo")
+                    .call(Value.of(2), Value.of("Sl"));
             String shortSrc = info.get("short_src").checkjstring();
             int currentLine = info.get("currentline").checkint();
+            String targetName = "CLIENT:" + target.get().toString();
+            if (source.get() != -1) targetName = "server";
+            String finalTargetName = targetName;
             runner.getSimulator().ifPresent(sim -> sim.getSimulation().log(
                     new IssueImpl(
                             IssueLevel.WARNING,
-                            "Event " + name.get() + " is not registered on " + target.get(),
-                            sim.getSimulation().getName(), new TraceEntry[]{
+                            "Event " + name.get() + " is not registered on " + finalTargetName,
+                            sim.getSimulation().getName(), new TraceEntry[] {
                             new TraceEntry().setFile(new CString(shortSrc)).setLine(new CInt(currentLine))
                     }, "register the event, or wait for it to load")
             ));
