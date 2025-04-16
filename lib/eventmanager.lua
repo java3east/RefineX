@@ -28,7 +28,6 @@ end
 function REFX_REGISTER_EVENT(name, callback, isNet)
     local handers = listeners[name] or {}
     local info = debug.getinfo(3, "Sl")
-    print("REFX_RESOURCE_PATH", REFX_RESOURCE_PATH)
     local path = trimToResourcePath(info.short_src)
     table.insert(handers, { callback = callback, isNet = isNet, registeredAt = {
             file = path,
@@ -46,6 +45,9 @@ function REFX_DISPATCH_EVENT(event)
             REFX_ERROR("WARNING", "Event '" .. event.name .. "' is a network event, but handler is not",
             "register the event as a network event.", {handler.registeredAt})
             goto continue
+        elseif event.isNet ~= handler.isNet then
+            REFX_ERROR("WARNING", "Event '" .. event.name .. "' is a local event, but handler is a network event (might cause security issues)",
+            "register the event as a local event.", {handler.registeredAt})
         end
 
         handler.callback(table.unpack(event.data))

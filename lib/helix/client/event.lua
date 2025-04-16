@@ -19,3 +19,9 @@ end
 function Events.CallRemote(name, ...)
     REFX_CALL_REMOTE(name, REFX_CLIENT_ID, -1, {...})
 end
+
+---@param name string
+---@vararg any
+function Events.Call(name, ...)
+    REFX_CALL_LOCAL(name, {...})
+end

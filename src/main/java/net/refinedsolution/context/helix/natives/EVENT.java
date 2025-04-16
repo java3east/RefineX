@@ -22,4 +22,10 @@ public class EVENT {
         else runner.getSimulator().flatMap(simulator -> simulator.getSimulation().getClient(target.get()))
                 .ifPresent(client -> client.dispatchEvent(event));
     }
+
+    @Native
+    public static void REFX_CALL_LOCAL(Runner runner, CString name, CCastable<?>[] parameters) {
+        Event event = new EventImpl().setName(name).setSource(0).setDestination(0).setData(parameters).setNetworked(false);
+        runner.getSimulator().ifPresent(simulator -> simulator.dispatchEvent(event));
+    }
 }
