@@ -67,10 +67,15 @@ end
 
 ---@param event vevent
 function REFX_DISPATCH_EVENT(event, instant)
+    if listeners[event] == nil then
+        return false
+    end
+
     if not instant then
         table.insert(waiting, event)
         return
     end
 
     process(event)
+    return true
 end

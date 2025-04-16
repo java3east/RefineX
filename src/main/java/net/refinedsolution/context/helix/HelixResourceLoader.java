@@ -57,42 +57,16 @@ public class HelixResourceLoader implements ResourceLoader {
         runner.loadFile("lib/override.lua");
         runner.loadFile("lib/native.lua");
 
-        TempFileManager.fromFile(resource.getLocation().getPath() + "/Shared/Index.lua", (str) -> """
-                local function split(str, sep)
-                    local t = {}
-                    for s in str:gmatch("[^"..sep.."]+") do
-                        table.insert(t, s)
-                    end
-                    return t
-                end
-                local ok, err = pcall(function()\n"""  + str + """
-                \nend)
-                if not ok then
-                    local lines = split(err, "\\n")
-                    local info = debug.getinfo(1, "Sl")
-                    REFX_ERROR("ERROR", lines[1], "?", {
-                        { file = info.short_src, line = info.currentline }
-                    })
-                end
+        TempFileManager.fromFile(resource.getLocation().getPath() + "/Shared/Index.lua", (str) ->
+                        "local function split(str, sep) local t = {} for s in str:gmatch(\"[^\"..sep..\"]+\") do table.insert(t, s) end return t end local ok, err = pcall(function()" +
+                                str.replaceFirst("\n", "") + """
+                end) if not ok then local lines = split(err, "\\n") local info = debug.getinfo(1, "Sl") REFX_ERROR("ERROR", lines[1], "?", { { file = info.short_src, line = info.currentline } }) end
                 """)
                 .ifPresent(runner::loadFile);
-        TempFileManager.fromFile(resource.getLocation().getPath() + path, (str) -> """
-                local function split(str, sep)
-                    local t = {}
-                    for s in str:gmatch("[^"..sep.."]+") do
-                        table.insert(t, s)
-                    end
-                    return t
-                end
-                local ok, err = pcall(function()\n"""  + str + """
-                \nend)
-                if not ok then
-                    local lines = split(err, "\\n")
-                    local info = debug.getinfo(1, "Sl")
-                    REFX_ERROR("ERROR", lines[1], "?", {
-                        { file = info.short_src, line = info.currentline }
-                    })
-                end
+        TempFileManager.fromFile(resource.getLocation().getPath() + path, (str) ->
+                        "local function split(str, sep) local t = {} for s in str:gmatch(\"[^\"..sep..\"]+\") do table.insert(t, s) end return t end local ok, err = pcall(function()" +
+                                str.replaceFirst("\n", "") + """
+                end) if not ok then local lines = split(err, "\\n") local info = debug.getinfo(1, "Sl") REFX_ERROR("ERROR", lines[1], "?", { { file = info.short_src, line = info.currentline } }) end
                 """)
                 .ifPresent(runner::loadFile);
     }

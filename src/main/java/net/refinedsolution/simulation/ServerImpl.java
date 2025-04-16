@@ -77,11 +77,15 @@ public class ServerImpl implements Server {
     }
 
     @Override
-    public void dispatchEvent(@NotNull Event event) {
-        LuaValue val = Value.of(event);
+    public boolean dispatchEvent(@NotNull Event event) {
+        boolean ok = false;
         for (Runner runner : runners.values()) {
-            runner.getGlobals().get("REFX_DISPATCH_EVENT").call(Value.of(val));
+            LuaValue ret = runner.getGlobals().get("REFX_DISPATCH_EVENT").call(Value.of(event));
+            if (ret.checkboolean()) {
+                ok = true;
+            }
         }
+        return ok;
     }
 
     @Override
