@@ -70,6 +70,13 @@ public class ClientImpl implements Client {
     }
 
     @Override
+    public void tick(double delta) {
+        for (Runner runner : runners.values()) {
+            runner.getGlobals().get("REFX_TICK").call(Value.of(delta));
+        }
+    }
+
+    @Override
     public long getId() {
         return this.id;
     }

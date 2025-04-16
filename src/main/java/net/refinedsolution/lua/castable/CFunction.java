@@ -9,7 +9,7 @@ import org.luaj.vm2.LuaValue;
 
 @ACastable(isDirect = true, castType = LuaFunction.class)
 public class CFunction extends CCastable<LuaFunction> {
-    {{
+    static {{
         Value.castables.put(LuaFunction.class, CFunction.class);
     }}
 

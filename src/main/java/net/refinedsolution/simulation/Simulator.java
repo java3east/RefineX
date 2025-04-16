@@ -41,4 +41,10 @@ public interface Simulator extends Idable {
      * @param event the event to send
      */
     void dispatchEvent(@NotNull Event event);
+
+    /**
+     * Performs a tick for this simulator
+     * @param delta the delta time since the last tick
+     */
+    void tick(double delta);
 }

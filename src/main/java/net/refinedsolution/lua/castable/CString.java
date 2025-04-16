@@ -13,7 +13,7 @@ import org.luaj.vm2.LuaValue;
  */
 @ACastable(isDirect = true, castType = LuaString.class)
 public class CString extends CCastable<String> {
-    {{
+    static {{
         Value.castables.put(LuaString.class, CString.class);
     }}
 

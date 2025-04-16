@@ -111,4 +111,12 @@ public class SimulationImpl implements Simulation, IssueLog, IssueLogger {
     public void log(@NotNull Issue issue) {
         this.issues.add(issue);
     }
+
+    @Override
+    public void tick(double delta) {
+        server.tick(delta);
+        for (Client client : this.clients) {
+            client.tick(delta);
+        }
+    }
 }

@@ -76,6 +76,23 @@ function simulation:loadAndStart(path, name)
     self:start(name)
 end
 
+---Simulates a tick for the simulation
+---@param deltaTime number? the time in seconds since the last tick (default: 0.01 (10ms))
+function simulation:tick(deltaTime)
+    deltaTime = deltaTime or 0.01
+    REFX_TICK(self.id, deltaTime)
+end
+
+---Performs the given amount of ticks with the given amount of delta
+---@param count number? (default: 1) the amount of ticks to perform
+---@param deltaTime number? (default: 0.01 (10ms))
+function simulation:doTicks(count, deltaTime)
+    count = count or 1
+    for i = 1, count do
+        self:tick(deltaTime)
+    end
+end
+
 ---Runs the given function asynchronously
 ---@param fun fun() the function to run
 function simulation.async(fun)

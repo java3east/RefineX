@@ -1,6 +1,7 @@
 package net.refinedsolution.context.refex.natives;
 
 import net.refinedsolution.lua.Runner;
+import net.refinedsolution.lua.castable.CDouble;
 import net.refinedsolution.lua.castable.CFunction;
 import net.refinedsolution.lua.castable.CInt;
 import net.refinedsolution.lua.castable.CString;
@@ -56,5 +57,13 @@ public class SIM {
         new Thread(() -> {
             func.get().invoke();
         }).start();
+    }
+
+    @Native
+    public static void REFX_TICK(Runner runner, CInt simId, CDouble delta) {
+        if (!GUID.has(simId.get(), Simulation.class))
+            throw new IllegalArgumentException("Simulation does not exist");
+        Simulation sim = (Simulation) GUID.identify(simId.get(), Simulation.class);
+        sim.tick(delta.get());
     }
 }

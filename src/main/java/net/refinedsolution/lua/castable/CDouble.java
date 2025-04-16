@@ -3,33 +3,31 @@ package net.refinedsolution.lua.castable;
 import net.refinedsolution.lua.ACastable;
 import net.refinedsolution.lua.Value;
 import org.jetbrains.annotations.NotNull;
-import org.luaj.vm2.LuaBoolean;
-import org.luaj.vm2.LuaInteger;
-import org.luaj.vm2.LuaValue;
+import org.luaj.vm2.*;
 
 /**
  * This class represents a castable integer
  * @author Java3east
  */
-@net.refinedsolution.lua.ACastable(isDirect = true, castType = LuaInteger.class)
-public class CInt extends CCastable<Integer> {
+@net.refinedsolution.lua.ACastable(isDirect = true, castType = LuaDouble.class)
+public class CDouble extends CCastable<Double> {
 
     static {{
-        Value.castables.put(LuaInteger.class, CInt.class);
+        Value.castables.put(LuaDouble.class, CDouble.class);
     }}
 
     @net.refinedsolution.lua.ACastable.Direct
-    public CInt(LuaValue value) {
+    public CDouble(LuaValue value) {
         super(value);
     }
 
-    public CInt(Integer value) {
+    public CDouble(Double value) {
         super(value);
     }
 
     @Override
-    protected @NotNull Integer from(@NotNull LuaValue val) {
-        return val.checkint();
+    protected @NotNull Double from(@NotNull LuaValue val) {
+        return val.checkdouble();
     }
 
     @Override

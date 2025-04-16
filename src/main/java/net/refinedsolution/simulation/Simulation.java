@@ -72,4 +72,10 @@ public interface Simulation extends Idable {
     @NotNull String getName();
 
     void log(@NotNull Issue issue);
+
+    /**
+     * Performs a tick for this simulation.
+     * @param delta the delta time since the last tick
+     */
+    void tick(double delta);
 }

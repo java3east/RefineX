@@ -9,7 +9,7 @@ import org.luaj.vm2.LuaValue;
 @ACastable(isDirect = true, castType = LuaBoolean.class)
 public class CBool extends CCastable<Boolean> {
 
-    {{
+    static {{
         Value.castables.put(LuaBoolean.class, CBool.class);
     }}
 

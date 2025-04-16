@@ -12,6 +12,9 @@
 ---@type table<string, vhandler[]>
 local listeners = {}
 
+---@type table<vevent>
+local waiting = {}
+
 ---@param fullPath string
 ---@return string
 local function trimToResourcePath(fullPath)
@@ -38,7 +41,7 @@ function REFX_REGISTER_EVENT(name, callback, isNet)
 end
 
 ---@param event vevent
-function REFX_DISPATCH_EVENT(event)
+local function process(event)
     local handlers = listeners[event.name] or {}
     for _, handler --[[@as vhandler]] in ipairs(handlers) do
         if event.isNet and not handler.isNet then
@@ -53,4 +56,21 @@ function REFX_DISPATCH_EVENT(event)
         handler.callback(table.unpack(event.data))
         ::continue::
     end
+end
+
+function REFX_EV_MAN_TICK()
+    for _, event --[[@as vevent]] in ipairs(waiting) do
+        process(event)
+    end
+    waiting = {}
+end
+
+---@param event vevent
+function REFX_DISPATCH_EVENT(event, instant)
+    if not instant then
+        table.insert(waiting, event)
+        return
+    end
+
+    process(event)
 end

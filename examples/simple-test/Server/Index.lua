@@ -4,3 +4,7 @@ Events.SubscribeRemote('test', function (source)
     print("client is saying hello!")
     Events.CallRemote('test', source, "hello from server!")
 end)
+
+Events.Subscribe("tick", function (deltaTime)
+    print("tick", deltaTime)
+end)
