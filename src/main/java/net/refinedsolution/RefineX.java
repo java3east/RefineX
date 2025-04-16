@@ -29,12 +29,14 @@ public class RefineX {
             for (String key : markers.keySet()) {
                 Marker marker = markers.get(key);
                 if (marker != null && !marker.isReached()) {
-                    System.out.println(new IssueImpl(
+                    Issue issue = new IssueImpl(
                             IssueLevel.WARNING,
                             "Function '" + marker.getFunctionName() + "' was never reached",
                             "RefineX", new TraceEntry[]{ marker.getTrace() },
                             "delete the function or call it"
-                    ));
+                    );
+                    manager.log(issue);
+                    System.out.println(issue);
                 }
             }
             System.exit(manager.getIssues().length);
