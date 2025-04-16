@@ -2,6 +2,7 @@ package net.refinedsolution;
 
 import net.refinedsolution.lua.RunnerImpl;
 import net.refinedsolution.context.refex.natives.SIM;
+import net.refinedsolution.util.issue.IssueManager;
 
 import java.io.File;
 
@@ -10,6 +11,8 @@ import java.io.File;
  * @author Java3east
  */
 public class RefineX {
+    public static final IssueManager manager = new IssueManager();
+
     public static void main(String[] args) {
         if (args.length == 0) {
             System.out.println("Usage: RefineX <path>");

@@ -1,5 +1,6 @@
 package net.refinedsolution.simulation;
 
+import net.refinedsolution.RefineX;
 import net.refinedsolution.resource.Resource;
 import net.refinedsolution.util.GUID;
 import net.refinedsolution.util.issue.Issue;
@@ -110,6 +111,7 @@ public class SimulationImpl implements Simulation, IssueLog, IssueLogger {
     @Override
     public void log(@NotNull Issue issue) {
         this.issues.add(issue);
+        RefineX.manager.log(issue);
     }
 
     @Override

@@ -22,7 +22,7 @@ local function trimToResourcePath(fullPath)
     if startIndex then
         return fullPath:sub(startIndex)
     end
-    return fullPath -- Return the original path if REFX_RESOURCE_PATH is not found
+    return fullPath
 end
 
 ---@param name string

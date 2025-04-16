@@ -10,6 +10,7 @@ import net.refinedsolution.resource.ResourceImpl;
 import net.refinedsolution.resource.ResourceLoader;
 import net.refinedsolution.simulation.Client;
 import net.refinedsolution.simulation.Simulator;
+import net.refinedsolution.util.file.TempFileManager;
 import org.jetbrains.annotations.NotNull;
 
 public class HelixResourceLoader implements ResourceLoader {
@@ -55,8 +56,48 @@ public class HelixResourceLoader implements ResourceLoader {
 
         runner.loadFile("lib/override.lua");
         runner.loadFile("lib/native.lua");
-        runner.loadFile(resource.getLocation().getPath() + "/Shared/Index.lua");
-        runner.loadFile(resource.getLocation().getPath() + path);
 
+        TempFileManager.fromFile(resource.getLocation().getPath() + "/Shared/Index.lua", (str) -> """
+                print("Loading", REFX_RESOURCE_PATH)
+                local function split(str, sep)
+                    local t = {}
+                    for s in str:gmatch("[^"..sep.."]+") do
+                        table.insert(t, s)
+                    end
+                    return t
+                end
+                local ok, err = pcall(function()\n"""  + str + """
+                \nend)
+                print("ok", ok, err)
+                if not ok then
+                    local lines = split(err, "\\n")
+                    local info = debug.getinfo(1, "Sl")
+                    REFX_ERROR("ERROR", lines[1], "?", {
+                        { file = info.short_src, line = info.currentline }
+                    })
+                end
+                """)
+                .ifPresent(runner::loadFile);
+        TempFileManager.fromFile(resource.getLocation().getPath() + path, (str) -> """
+                print("Loading", REFX_RESOURCE_PATH)
+                local function split(str, sep)
+                    local t = {}
+                    for s in str:gmatch("[^"..sep.."]+") do
+                        table.insert(t, s)
+                    end
+                    return t
+                end
+                local ok, err = pcall(function()\n"""  + str + """
+                \nend)
+                print("ok", ok, err)
+                if not ok then
+                    local lines = split(err, "\\n")
+                    local info = debug.getinfo(1, "Sl")
+                    REFX_ERROR("ERROR", lines[1], "?", {
+                        { file = info.short_src, line = info.currentline }
+                    })
+                end
+                """)
+                .ifPresent(runner::loadFile);
     }
 }
