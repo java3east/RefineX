@@ -6,5 +6,4 @@ Events.SubscribeRemote('test', function (source)
 end)
 
 Events.Subscribe("tick", function (deltaTime)
-    print("tick", deltaTime)
 end)

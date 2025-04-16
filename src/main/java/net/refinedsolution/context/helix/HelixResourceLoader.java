@@ -58,7 +58,6 @@ public class HelixResourceLoader implements ResourceLoader {
         runner.loadFile("lib/native.lua");
 
         TempFileManager.fromFile(resource.getLocation().getPath() + "/Shared/Index.lua", (str) -> """
-                print("Loading", REFX_RESOURCE_PATH)
                 local function split(str, sep)
                     local t = {}
                     for s in str:gmatch("[^"..sep.."]+") do
@@ -78,7 +77,6 @@ public class HelixResourceLoader implements ResourceLoader {
                 """)
                 .ifPresent(runner::loadFile);
         TempFileManager.fromFile(resource.getLocation().getPath() + path, (str) -> """
-                print("Loading", REFX_RESOURCE_PATH)
                 local function split(str, sep)
                     local t = {}
                     for s in str:gmatch("[^"..sep.."]+") do
