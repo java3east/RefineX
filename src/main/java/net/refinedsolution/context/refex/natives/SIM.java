@@ -1,19 +1,14 @@
 package net.refinedsolution.context.refex.natives;
 
+import net.refinedsolution.RefineX;
 import net.refinedsolution.lua.Runner;
 import net.refinedsolution.lua.castable.CDouble;
 import net.refinedsolution.lua.castable.CFunction;
 import net.refinedsolution.lua.castable.CInt;
 import net.refinedsolution.lua.castable.CString;
 import net.refinedsolution.lua.nat.Native;
-import net.refinedsolution.resource.Resource;
 import net.refinedsolution.simulation.*;
 import net.refinedsolution.util.GUID;
-import net.refinedsolution.util.issue.Issue;
-import net.refinedsolution.util.issue.IssueImpl;
-import net.refinedsolution.util.issue.IssueLevel;
-import net.refinedsolution.util.issue.TraceEntry;
-import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -58,9 +53,12 @@ public class SIM {
 
     @Native
     public static void Async(Runner runner, CFunction func) {
-        new Thread(() -> {
+        Thread t = new Thread(() -> {
             func.get().invoke();
-        }).start();
+            RefineX.onThreadFinish(Thread.currentThread());
+        });
+        RefineX.threadRegister.add(t);
+        t.start();
     }
 
     @Native

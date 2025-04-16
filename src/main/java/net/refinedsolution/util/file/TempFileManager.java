@@ -45,7 +45,6 @@ public class TempFileManager {
                 }
                 tempFile.createNewFile();
             }
-            System.out.println("Writing temp file: " + tempFile.getAbsolutePath());
             FileWriter writer = new FileWriter(tempFile);
             writer.write(cont);
             writer.close();

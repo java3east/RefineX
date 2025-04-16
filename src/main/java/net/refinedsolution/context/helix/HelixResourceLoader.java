@@ -68,7 +68,6 @@ public class HelixResourceLoader implements ResourceLoader {
                 end
                 local ok, err = pcall(function()\n"""  + str + """
                 \nend)
-                print("ok", ok, err)
                 if not ok then
                     local lines = split(err, "\\n")
                     local info = debug.getinfo(1, "Sl")
@@ -89,7 +88,6 @@ public class HelixResourceLoader implements ResourceLoader {
                 end
                 local ok, err = pcall(function()\n"""  + str + """
                 \nend)
-                print("ok", ok, err)
                 if not ok then
                     local lines = split(err, "\\n")
                     local info = debug.getinfo(1, "Sl")

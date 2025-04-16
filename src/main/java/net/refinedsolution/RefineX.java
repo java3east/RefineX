@@ -5,6 +5,8 @@ import net.refinedsolution.context.refex.natives.SIM;
 import net.refinedsolution.util.issue.IssueManager;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Main entry point for RefineX
@@ -12,6 +14,14 @@ import java.io.File;
  */
 public class RefineX {
     public static final IssueManager manager = new IssueManager();
+    public static List<Thread> threadRegister = new ArrayList<>();
+
+    public static void onThreadFinish(Thread thread) {
+        threadRegister.remove(thread);
+        if (threadRegister.isEmpty()) {
+            System.exit(manager.getIssues().length);
+        }
+    }
 
     public static void main(String[] args) {
         if (args.length == 0) {
