@@ -65,7 +65,7 @@ public class IssueImpl implements Issue {
     public String toString() {
         return Color.WHITE.ascii() + "[" + this.severity.getColor().ascii() + this.severity + Color.WHITE.ascii() +
                 "] [" + this.severity.getColor().ascii() + this.environmentName + Color.WHITE.ascii() + "] " +
-                this.severity.getColor().ascii() + this.message + " try to " + this.fixSuggestion +
-                " (at " + this.trace[0] + ")";
+                this.severity.getColor().ascii() + this.message + ". Try to " + this.fixSuggestion +
+                " (@" + this.trace[0] + ")";
     }
 }

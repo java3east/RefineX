@@ -51,6 +51,7 @@ public class HelixResourceLoader implements ResourceLoader {
         }
 
         runner.getGlobals().set("REFX_CLIENT_ID", clId.lua());
+        runner.getGlobals().set("REFX_RESOURCE_PATH", resource.getLocation().getPath());
 
         runner.loadFile("lib/override.lua");
         runner.loadFile("lib/native.lua");
