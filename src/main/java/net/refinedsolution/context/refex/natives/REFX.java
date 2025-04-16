@@ -4,8 +4,15 @@ import net.refinedsolution.lua.Runner;
 import net.refinedsolution.lua.castable.CString;
 import net.refinedsolution.lua.nat.Native;
 import net.refinedsolution.simulation.Client;
+import net.refinedsolution.simulation.Simulation;
 import net.refinedsolution.util.Color;
 import net.refinedsolution.util.StringUtils;
+import net.refinedsolution.util.issue.Issue;
+import net.refinedsolution.util.issue.IssueImpl;
+import net.refinedsolution.util.issue.IssueLevel;
+import net.refinedsolution.util.issue.TraceEntry;
+
+import java.util.Optional;
 
 public class REFX {
     @Native
@@ -26,5 +33,16 @@ public class REFX {
 
         System.out.println(Color.WHITE.ascii() + "[" + Color.BLUE.ascii() +  "INFO" + Color.WHITE.ascii() + "] "
                 + simName + " " + Color.RESET.ascii() + sb.toString().trim());
+    }
+
+    @Native
+    public static void REFX_ERROR(Runner runner, IssueLevel level, CString msg, CString fix, TraceEntry[] trace) {
+        String simName = runner.getSimulator().isPresent() ?
+                runner.getSimulator().get().getSimulation().getName() : "RefineX";
+
+        Issue issue = new IssueImpl(level, msg.get(), simName, trace, fix.get());
+        System.out.println(issue);
+
+        runner.getSimulator().ifPresent(sim -> sim.getSimulation().log(issue));
     }
 }

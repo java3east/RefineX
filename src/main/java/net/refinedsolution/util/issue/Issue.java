@@ -32,4 +32,10 @@ public interface Issue {
      * @return the trace of this issue
      */
     @NotNull TraceEntry[] getTrace();
+
+    /**
+     * Returns a suggestion, that might help to fix this issue.
+     * @return the suggestion on how to fix this issue
+     */
+    @NotNull String getFixSuggestion();
 }

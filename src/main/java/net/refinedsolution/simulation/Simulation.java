@@ -2,6 +2,7 @@ package net.refinedsolution.simulation;
 
 import net.refinedsolution.resource.Resource;
 import net.refinedsolution.util.Idable;
+import net.refinedsolution.util.issue.Issue;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
@@ -69,4 +70,6 @@ public interface Simulation extends Idable {
      * @return the name of this simulation
      */
     @NotNull String getName();
+
+    void log(@NotNull Issue issue);
 }

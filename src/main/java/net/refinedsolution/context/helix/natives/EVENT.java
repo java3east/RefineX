@@ -15,7 +15,8 @@ public class EVENT {
         newParams[0] = source;
         System.arraycopy(parameters, 0, newParams, 1, parameters.length);
         if (source.get() == -1) newParams = parameters;
-        Event event = new EventImpl().setName(name).setSource(source).setDestination(target).setData(newParams);
+        Event event = new EventImpl().setName(name).setSource(source).setDestination(target).setData(newParams)
+                .setNetworked(!source.get().equals(target.get()));
         int src = source.get();
         if (src != -1) runner.getSimulator().ifPresent(simulator -> simulator.getSimulation().getServer().dispatchEvent(event));
         else runner.getSimulator().flatMap(simulator -> simulator.getSimulation().getClient(target.get()))
