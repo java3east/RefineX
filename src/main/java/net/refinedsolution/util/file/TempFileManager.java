@@ -3,12 +3,10 @@ package net.refinedsolution.util.file;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.Scanner;
-import java.util.function.Function;
 
 /**
  * This class creates temporary files from a given path / string.

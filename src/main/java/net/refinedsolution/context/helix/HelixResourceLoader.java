@@ -4,7 +4,6 @@ import net.refinedsolution.RefineX;
 import net.refinedsolution.context.helix.natives.EVENT;
 import net.refinedsolution.context.refex.natives.REFX;
 import net.refinedsolution.context.refex.natives.TEST;
-import net.refinedsolution.lua.Runner;
 import net.refinedsolution.lua.RunnerImpl;
 import net.refinedsolution.lua.castable.CInt;
 import net.refinedsolution.lua.castable.CString;
@@ -19,7 +18,6 @@ import net.refinedsolution.util.issue.TraceEntry;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
-import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

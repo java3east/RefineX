@@ -3,7 +3,6 @@ package net.refinedsolution.lua.castable;
 import net.refinedsolution.lua.ACastable;
 import net.refinedsolution.lua.Value;
 import org.jetbrains.annotations.NotNull;
-import org.luaj.vm2.LuaBoolean;
 import org.luaj.vm2.LuaInteger;
 import org.luaj.vm2.LuaValue;
 

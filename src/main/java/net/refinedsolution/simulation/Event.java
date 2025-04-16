@@ -4,8 +4,6 @@ import net.refinedsolution.lua.ACastable;
 import net.refinedsolution.lua.castable.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Optional;
-
 /**
  * Events can be dispatched on simulators.
  * @author Java3east

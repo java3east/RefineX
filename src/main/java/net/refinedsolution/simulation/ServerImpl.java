@@ -9,7 +9,6 @@ import org.jetbrains.annotations.Nullable;
 import org.luaj.vm2.LuaValue;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
