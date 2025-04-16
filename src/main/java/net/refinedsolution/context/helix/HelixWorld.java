@@ -4,6 +4,10 @@ import net.refinedsolution.simulation.Simulator;
 import net.refinedsolution.simulation.World;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Helix world.
+ * @author Java3east
+ */
 public class HelixWorld implements World {
     private Simulator simulator;
 

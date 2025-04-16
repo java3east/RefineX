@@ -6,6 +6,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * This class is used to represent a FiveM manifest.
+ * @author Java3east
+ */
 public class FivemManifest implements Manifest {
     @Override
     public void add(@NotNull String key, @NotNull String value) {

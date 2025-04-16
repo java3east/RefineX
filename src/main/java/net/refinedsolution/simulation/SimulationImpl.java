@@ -14,6 +14,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+/**
+ * A default implementation of the Simulation interface
+ * @author Java3east
+ */
 public class SimulationImpl implements Simulation, IssueLog, IssueLogger {
     private final long id;
     private final Server server;

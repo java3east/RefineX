@@ -13,6 +13,10 @@ import net.refinedsolution.util.issue.IssueLevel;
 import net.refinedsolution.util.issue.TraceEntry;
 import org.luaj.vm2.LuaTable;
 
+/**
+ * Events can be dispatched on simulators.
+ * @author Java3east
+ */
 public class EVENT {
     @Native
     public static void REFX_CALL_REMOTE(Runner runner, CString name, CInt source, CInt target, CCastable<?>[] parameters) {

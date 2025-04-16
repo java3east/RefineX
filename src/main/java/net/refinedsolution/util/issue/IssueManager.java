@@ -8,6 +8,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+/**
+ * A class that manages issues.
+ * It can be used to log issues and retrieve them later.
+ * @author Java3east
+ */
 public class IssueManager implements  IssueLog, IssueLogger {
     private final Optional<IssueManager> parent;
     private final List<Issue> issues = new ArrayList<>();

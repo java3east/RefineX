@@ -9,6 +9,10 @@ import org.luaj.vm2.LuaValue;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+/**
+ * This class is used to call native functions.
+ * @author Java3east
+ */
 public class NativeReference {
     /**
      * Checks if the given class contains a Native function with the given name

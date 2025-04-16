@@ -7,6 +7,10 @@ import net.refinedsolution.lua.castable.CString;
 import net.refinedsolution.lua.nat.Native;
 import net.refinedsolution.util.Marker;
 
+/**
+ * Contains functions for testing purposes.
+ * @author Java3east
+ */
 public class TEST {
     @Native
     public static void RefxSetMarkersEnabled(Runner runner, CBool enable) {

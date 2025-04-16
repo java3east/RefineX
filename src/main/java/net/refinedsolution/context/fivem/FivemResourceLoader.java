@@ -6,6 +6,10 @@ import net.refinedsolution.resource.ResourceLoader;
 import net.refinedsolution.simulation.Simulator;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * This class is used to load FiveM resources.
+ * @author Java3east
+ */
 public class FivemResourceLoader implements ResourceLoader {
     @Override
     public @NotNull Resource load(@NotNull String path) {

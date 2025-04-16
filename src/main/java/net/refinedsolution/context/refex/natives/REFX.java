@@ -11,6 +11,10 @@ import net.refinedsolution.util.issue.IssueImpl;
 import net.refinedsolution.util.issue.IssueLevel;
 import net.refinedsolution.util.issue.TraceEntry;
 
+/**
+ * Contains RefineX related functions.
+ * @author Java3east
+ */
 public class REFX {
     @Native
     public static void REFX_PRINT(Runner runner, CString[] args) {

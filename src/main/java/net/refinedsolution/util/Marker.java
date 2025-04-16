@@ -2,6 +2,10 @@ package net.refinedsolution.util;
 
 import net.refinedsolution.util.issue.TraceEntry;
 
+/**
+ * A marker is a special type of issue, that can be used to mark a specific point in the simulation.
+ * @author Java3east
+ */
 public class Marker {
     private final String name;
     private final String funName;

@@ -21,6 +21,10 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Loads a HELIX resource.
+ * @author Java3east
+ */
 public class HelixResourceLoader implements ResourceLoader {
     @Override
     public @NotNull Resource load(@NotNull String path) {
