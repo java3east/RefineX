@@ -36,9 +36,7 @@ public class ServerImpl implements Server {
 
     @Override
     public @NotNull List<Client> getClients() {
-        List<Client> clients = new ArrayList<>();
-        this.simulation.getClients().forEach(c -> clients.add((Client) c));
-        return clients;
+        return new ArrayList<>(this.simulation.getClients());
     }
 
     @Override
