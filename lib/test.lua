@@ -23,7 +23,9 @@ function test.runAll(mutation)
         end
     end
     if mutation ~= 0 and not hasIssues then
-        REFX_ERROR("ERROR", "All tests passed", ".. trace & fix coming soon...", {{file = "", line = -1}})
+        REFX_ERROR("ERROR", "All tests passed, mutation survived! (replaced '==' with '~=')", "write tests covering the mutation", {{file = "", line = -1}})
+    else
+        print("ALL MUTATIONS KILLED => PASSED")
     end
 end
 
