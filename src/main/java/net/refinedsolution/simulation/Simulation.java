@@ -55,10 +55,11 @@ public interface Simulation extends Idable {
     /**
      * Starts the resource with the given name.
      * @param name the name of the resource to start
+     * @param mutation the mutation to start the resource with
      *
      * @throws IllegalArgumentException if the resource with the given name doesn't exist
      */
-    void start(String name);
+    void start(@NotNull String name, int mutation);
 
     /**
      * Returns the context of this simulation.

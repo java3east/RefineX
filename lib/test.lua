@@ -15,16 +15,15 @@ function test.setResource(path, name)
     resource.name = name
 end
 
-local simulations = {}
-local mutate = false
-
-function test.doMutations(m)
-    mutate = m
-end
-
-function test.runAll()
+function test.runAll(mutation)
+    local hasIssues = false
     for _, test in ipairs(tests) do
-        test:run()
+        if test:run(mutation) then
+            hasIssues = true
+        end
+    end
+    if mutation ~= 0 and not hasIssues then
+        REFX_ERROR("ERROR", "All tests passed", ".. trace & fix coming soon...", {{file = "", line = -1}})
     end
 end
 
@@ -43,12 +42,11 @@ function test:new(cb, name, context)
     return obj
 end
 
-function test:run()
-    local t = self
-    simulation:new(function(sim)
-        table.insert(simulations, sim)
-        sim:loadAndStart(resource.path, resource.name)
-        t.cb(t, sim)
-        sim:postProcess()
-    end, self.context, "TEST:" .. self.name)
+function test:run(mutation)
+    mutation = mutation or 0
+    local sim = simulation:new('HELIX', "TEST:" .. self.name .. "/MUTATION:" .. tostring(mutation))
+    sim:loadAndStart(resource.path, resource.name, mutation)
+    self:cb(sim)
+    sim:postProcess()
+    return sim:hasErrors()
 end

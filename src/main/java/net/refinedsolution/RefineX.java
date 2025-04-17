@@ -1,5 +1,6 @@
 package net.refinedsolution;
 
+import net.refinedsolution.context.refex.natives.REFX;
 import net.refinedsolution.context.refex.natives.TEST;
 import net.refinedsolution.lua.RunnerImpl;
 import net.refinedsolution.context.refex.natives.SIM;
@@ -29,6 +30,7 @@ public class RefineX {
         RunnerImpl runner = new RunnerImpl();
         runner.addNamespace(SIM.class);
         runner.addNamespace(TEST.class);
+        runner.addNamespace(REFX.class);
         runner.loadFile("./lib/native.lua");
         runner.loadFile("./lib/simulation.lua");
         runner.loadFile("./lib/test.lua");

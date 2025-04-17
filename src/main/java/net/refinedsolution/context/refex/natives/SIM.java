@@ -7,6 +7,7 @@ import net.refinedsolution.lua.nat.Native;
 import net.refinedsolution.resource.Resource;
 import net.refinedsolution.simulation.*;
 import net.refinedsolution.util.GUID;
+import net.refinedsolution.util.test.MutationManager;
 
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -24,7 +25,7 @@ public class SIM {
     }
 
     @Native
-    public static CInt AddSimulatedClient(Runner runner, CInt simulation, CString[] identifiers) {
+    public static CInt AddSimulatedClient(Runner runner, CInt simulation, CString[] identifiers, CInt mutation) {
         if (!GUID.has(simulation.get(), Simulation.class))
             throw new IllegalArgumentException("Simulation does not exist");
 
@@ -35,7 +36,7 @@ public class SIM {
         );
         sim.getServer().connect(client);
         for (Resource res : sim.getResources()) {
-            sim.getContext().getResourceLoader().start(client, res);
+            sim.getContext().getResourceLoader().start(client, res, mutation.get());
         }
         return new CInt(client.getClientId());
     }
@@ -47,9 +48,9 @@ public class SIM {
     }
 
     @Native
-    public static void StartResource(Runner runner, CInt simulation, CString name) {
+    public static void StartResource(Runner runner, CInt simulation, CString name, CInt mutation) {
         Simulation sim = (Simulation) GUID.identify(simulation.get(), Simulation.class);
-        sim.start(name.get());
+        sim.start(name.get(), mutation.get());
     }
 
     @Native

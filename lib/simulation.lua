@@ -10,17 +10,18 @@ client.__index = client
 ---@param simulation simulation
 ---@param identifier table<string>
 ---@return client client
-function client:new(simulation, identifier)
+function client:new(simulation, identifier, mut)
     local cl = {}
     setmetatable(cl, client)
     cl.simulation = simulation
     cl.identifier = identifier
+    cl.mut = mut
     return cl
 end
 
 ---Connects this client to the server
 function client:connect()
-    self.source = AddSimulatedClient(self.simulation.id, self.identifier)
+    self.source = AddSimulatedClient(self.simulation.id, self.identifier, self.mut)
 end
 
 function client:__tostring()
@@ -29,20 +30,18 @@ end
 
 ---@class simulation
 ---@field id number
+---@field mut number
 simulation = {}
 simulation.__index = simulation
 
 ---Creates a new simulation
----@param cb fun(simulation: simulation)
 ---@param context 'FIVEM'|'HELIX'
 ---@param name string the name of the simulation
-function simulation:new(cb, context, name)
-    Async(function()
-        local sim = {}
-        setmetatable(sim, simulation)
-        sim.id = CreateSimulation(context, name)
-        cb(sim)
-    end)
+function simulation:new(context, name)
+    local sim = {}
+    setmetatable(sim, simulation)
+    sim.id = CreateSimulation(context, name)
+    return sim
 end
 
 ---Connects a new client with the given identifiers
@@ -50,7 +49,7 @@ end
 ---@param identifier table<string>
 ---@return client client
 function simulation:connect(identifier)
-    local cl = client:new(self, identifier)
+    local cl = client:new(self, identifier, self.mut)
     cl:connect()
     return cl
 end
@@ -63,17 +62,21 @@ end
 
 ---Starts the resource with the given name
 ---@param name string the name of the resource
-function simulation:start(name)
-    StartResource(self.id, name)
+---@param mutation number?
+function simulation:start(name, mutation)
+    mutation = mutation or 0
+    self.mut = mutation
+    StartResource(self.id, name, mutation)
 end
 
 ---Loads and starts the resource with the given name in the given containing folder
 ---Only works if the defined name in the manifest is the same as the folder name
 ---@param path string the containing folder
 ---@param name string the name of the resource
-function simulation:loadAndStart(path, name)
+---@param mutation number?
+function simulation:loadAndStart(path, name, mutation)
     self:load(path .. "/" .. name)
-    self:start(name)
+    self:start(name, mutation)
 end
 
 ---Simulates a tick for the simulation

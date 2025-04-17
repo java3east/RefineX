@@ -14,8 +14,15 @@ import net.refinedsolution.simulation.Simulator;
 import net.refinedsolution.util.test.Marker;
 import net.refinedsolution.util.file.TempFileManager;
 import net.refinedsolution.util.issue.TraceEntry;
+import net.refinedsolution.util.test.Mutation;
+import net.refinedsolution.util.test.MutationManager;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,7 +42,7 @@ public class HelixResourceLoader implements ResourceLoader {
     }
 
     @Override
-    public void start(@NotNull Simulator simulator, @NotNull Resource resource) {
+    public void start(@NotNull Simulator simulator, @NotNull Resource resource, int mutation) {
         RunnerImpl runner = new RunnerImpl(simulator);
         simulator.addResource(resource, runner);
         runner.addNamespace(REFX.class);
@@ -69,7 +76,6 @@ public class HelixResourceLoader implements ResourceLoader {
 
         runner.loadFile("lib/override.lua");
         runner.loadFile("lib/native.lua");
-
 
         TempFileManager.ModifierFunction modifier = (str, file) -> {
             Pattern pattern = Pattern.compile("(function\\s+\\w*\\s*\\([^)]*\\s*(?:,\\s*\\.\\.\\.)?\\))");
@@ -116,10 +122,23 @@ public class HelixResourceLoader implements ResourceLoader {
         };
         String file = resource.getLocation().getPath() + "/Shared/Index.lua";
 
-        TempFileManager.fromFile(file, modifier)
-                .ifPresent(runner::loadFile);
-        file = resource.getLocation().getPath() + path;
-        TempFileManager.fromFile(file, modifier)
-                .ifPresent(runner::loadFile);
+        String finalPath = path;
+        HashMap<String, String> files = TempFileManager.temp(new ArrayList<>() {{
+            add(resource.getLocation().getPath() + "/Shared/Index.lua");
+            add(resource.getLocation().getPath() + finalPath);
+        }}, modifier);
+        MutationManager manager = new MutationManager(files);
+        Mutation mutationObj = manager.getMutation(mutation);
+        for (String fileName : mutationObj.files().keySet()) {
+            String content = mutationObj.files().get(fileName);
+            try {
+                FileWriter writer = new FileWriter(System.getProperty("user.dir") + fileName);
+                writer.write(content);
+                writer.close();
+                runner.loadFile(fileName);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

@@ -72,7 +72,7 @@ public class SimulationImpl implements Simulation, IssueLog, IssueLogger {
     }
 
     @Override
-    public void start(String name) {
+    public void start(@NotNull String name, int mutation) {
         Optional<Resource> resource = Optional.empty();
         for (Resource res : this.resources) {
             if (res.getName().equals(name)) {
@@ -83,9 +83,9 @@ public class SimulationImpl implements Simulation, IssueLog, IssueLogger {
         if (resource.isEmpty())
             throw new IllegalArgumentException("Resource not found: " + name);
 
-        this.context.getResourceLoader().start(this.server, resource.get());
+        this.context.getResourceLoader().start(this.server, resource.get(), mutation);
         for (Simulator client : this.clients) {
-            this.context.getResourceLoader().start(client, resource.get());
+            this.context.getResourceLoader().start(client, resource.get(), mutation);
         }
     }
 
