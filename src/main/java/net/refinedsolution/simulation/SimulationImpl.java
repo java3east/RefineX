@@ -2,14 +2,15 @@ package net.refinedsolution.simulation;
 
 import net.refinedsolution.RefineX;
 import net.refinedsolution.resource.Resource;
+import net.refinedsolution.util.Color;
 import net.refinedsolution.util.GUID;
-import net.refinedsolution.util.issue.Issue;
-import net.refinedsolution.util.issue.IssueLog;
-import net.refinedsolution.util.issue.IssueLogger;
+import net.refinedsolution.util.issue.*;
+import net.refinedsolution.util.test.Marker;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -26,6 +27,7 @@ public class SimulationImpl implements Simulation, IssueLog, IssueLogger {
     private final SimulationContext context;
     private final String name;
     private final List<Issue> issues = new ArrayList<>();
+    private final HashMap<String, Marker> markers = new HashMap<>();
 
     public SimulationImpl(SimulationContext context, String name) {
         this.id = GUID.identify(this);
@@ -60,7 +62,7 @@ public class SimulationImpl implements Simulation, IssueLog, IssueLogger {
 
     @Override
     public @NotNull List<Resource> getResources() {
-        return List.of();
+        return resources;
     }
 
     @Override
@@ -115,7 +117,6 @@ public class SimulationImpl implements Simulation, IssueLog, IssueLogger {
     @Override
     public void log(@NotNull Issue issue) {
         this.issues.add(issue);
-        RefineX.manager.log(issue);
         System.out.println(issue);
     }
 
@@ -125,5 +126,37 @@ public class SimulationImpl implements Simulation, IssueLog, IssueLogger {
         for (Client client : this.clients) {
             client.tick(delta);
         }
+    }
+
+    @Override
+    public void postProcess() {
+        for (String marker : this.markers.keySet()) {
+            Marker m = this.markers.get(marker);
+            if (!m.isReached()) {
+                this.log(new IssueImpl(
+                        IssueLevel.WARNING,
+                        "Function '" + m.getFunctionName() + "' has not been reached",
+                        m.getSimulator().getSimulation().getName() + Color.WHITE.ascii() + "] [" +
+                                Color.YELLOW.ascii() + m.getSimulator().getName(),
+                        new TraceEntry[] {m.getTrace()},
+                        "calling or removing the function"
+                ));
+            }
+        }
+    }
+
+    @Override
+    public boolean hasIssues() {
+        return !this.issues.isEmpty();
+    }
+
+    @Override
+    public void confirmMarker(@NotNull String marker) {
+        this.markers.get(marker).setReached();
+    }
+
+    @Override
+    public void registerMarker(@NotNull Marker marker) {
+        this.markers.put(marker.getName(), marker);
     }
 }

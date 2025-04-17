@@ -48,4 +48,10 @@ public interface Simulator extends Idable {
      * @param delta the delta time since the last tick
      */
     void tick(double delta);
+
+    /**
+     * Returns the name of this simulator
+     * @return the name of this simulator
+     */
+    @NotNull String getName();
 }

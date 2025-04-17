@@ -93,6 +93,14 @@ function simulation:doTicks(count, deltaTime)
     end
 end
 
+function simulation:hasErrors()
+    return RefxSimHasErrors(self.id)
+end
+
+function simulation:postProcess()
+    RefxSimPostProcess(self.id)
+end
+
 ---Runs the given function asynchronously
 ---@param fun fun() the function to run
 function simulation.async(fun)

@@ -1,11 +1,11 @@
 package net.refinedsolution.context.refex.natives;
 
-import net.refinedsolution.RefineX;
 import net.refinedsolution.lua.Runner;
-import net.refinedsolution.lua.castable.CBool;
+import net.refinedsolution.lua.castable.CInt;
 import net.refinedsolution.lua.castable.CString;
 import net.refinedsolution.lua.nat.Native;
-import net.refinedsolution.util.Marker;
+import net.refinedsolution.simulation.Simulation;
+import net.refinedsolution.util.GUID;
 
 /**
  * Contains functions for testing purposes.
@@ -13,15 +13,10 @@ import net.refinedsolution.util.Marker;
  */
 public class TEST {
     @Native
-    public static void RefxSetMarkersEnabled(Runner runner, CBool enable) {
-        RefineX.useMarkers = enable.get();
-    }
-
-    @Native
-    public static void RefxTriggerMarker(Runner runner, CString name) {
-        Marker marker = RefineX.markers.get(name.get());
-        if (marker != null) {
-            marker.setReached();
-        }
+    public static void RefxTriggerMarker(Runner runner, CInt simId, CString name) {
+        if (!GUID.has(simId.get(), Simulation.class))
+            throw new IllegalArgumentException("Simulation does not exist");
+        Simulation sim = (Simulation) GUID.identify(simId.get(), Simulation.class);
+        sim.confirmMarker(name.get());
     }
 }

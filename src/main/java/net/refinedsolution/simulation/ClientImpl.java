@@ -83,6 +83,11 @@ public class ClientImpl implements Client {
     }
 
     @Override
+    public @NotNull String getName() {
+        return "CLIENT:" + this.getClientId();
+    }
+
+    @Override
     public long getId() {
         return this.id;
     }

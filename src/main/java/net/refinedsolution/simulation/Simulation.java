@@ -3,6 +3,7 @@ package net.refinedsolution.simulation;
 import net.refinedsolution.resource.Resource;
 import net.refinedsolution.util.Idable;
 import net.refinedsolution.util.issue.Issue;
+import net.refinedsolution.util.test.Marker;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
@@ -78,4 +79,27 @@ public interface Simulation extends Idable {
      * @param delta the delta time since the last tick
      */
     void tick(double delta);
+
+    /**
+     * Post-processing should check if all markers have been reached.
+     */
+    void postProcess();
+
+    /**
+     * Checks if this simulation has any issues.
+     * @return true if this simulation has any issues, false otherwise
+     */
+    boolean hasIssues();
+
+    /**
+     * Marks the given marker as reached
+     * @param marker the marker that has been reached
+     */
+    void confirmMarker(@NotNull String marker);
+
+    /**
+     * Registers a marker for this simulation.
+     * @param marker the marker that will be expected to be called
+     */
+    void registerMarker(@NotNull Marker marker);
 }

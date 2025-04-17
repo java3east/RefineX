@@ -95,6 +95,11 @@ public class ServerImpl implements Server {
     }
 
     @Override
+    public @NotNull String getName() {
+        return "SERVER";
+    }
+
+    @Override
     public long getId() {
         return this.id;
     }

@@ -1,6 +1,5 @@
 package net.refinedsolution.context.helix;
 
-import net.refinedsolution.RefineX;
 import net.refinedsolution.context.helix.natives.EVENT;
 import net.refinedsolution.context.refex.natives.REFX;
 import net.refinedsolution.context.refex.natives.TEST;
@@ -12,7 +11,7 @@ import net.refinedsolution.resource.ResourceImpl;
 import net.refinedsolution.resource.ResourceLoader;
 import net.refinedsolution.simulation.Client;
 import net.refinedsolution.simulation.Simulator;
-import net.refinedsolution.util.Marker;
+import net.refinedsolution.util.test.Marker;
 import net.refinedsolution.util.file.TempFileManager;
 import net.refinedsolution.util.issue.TraceEntry;
 import org.jetbrains.annotations.NotNull;
@@ -64,6 +63,7 @@ public class HelixResourceLoader implements ResourceLoader {
             clId = new CInt(client.getClientId());
         }
 
+        runner.getGlobals().set("REFX_SIM_ID", new CInt((int)simulator.getSimulation().getId()).lua());
         runner.getGlobals().set("REFX_CLIENT_ID", clId.lua());
         runner.getGlobals().set("REFX_RESOURCE_PATH", resource.getLocation().getPath());
 
@@ -99,9 +99,9 @@ public class HelixResourceLoader implements ResourceLoader {
 
                 String markerName = "MARKER" + new Random().nextInt(999999999);
                 Marker m = new Marker(markerName, matcher.group(1), new TraceEntry().setFile(new CString(file))
-                        .setLine(new CInt(lineNumber)));
-                RefineX.markers.put(markerName, m);
-                String marker = String.format(" RefxTriggerMarker('%s')", markerName);
+                        .setLine(new CInt(lineNumber)), simulator);
+                simulator.getSimulation().registerMarker(m);
+                String marker = String.format(" RefxTriggerMarker(REFX_SIM_ID, '%s')", markerName);
                 matcher.appendReplacement(modifiedContent, matcher.group(1) + marker);
             }
             matcher.appendTail(modifiedContent);

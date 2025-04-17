@@ -8,6 +8,6 @@ Events.SubscribeRemote("test", function (msg)
     print("server said", msg)
 end)
 
--- Events.Subscribe("tick", tick)
+Events.Subscribe("tick", tick)
 
-Events.CallRemote('test')
+Events.CallRemote('test', 1)

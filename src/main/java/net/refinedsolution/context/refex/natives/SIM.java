@@ -2,16 +2,15 @@ package net.refinedsolution.context.refex.natives;
 
 import net.refinedsolution.RefineX;
 import net.refinedsolution.lua.Runner;
-import net.refinedsolution.lua.castable.CDouble;
-import net.refinedsolution.lua.castable.CFunction;
-import net.refinedsolution.lua.castable.CInt;
-import net.refinedsolution.lua.castable.CString;
+import net.refinedsolution.lua.castable.*;
 import net.refinedsolution.lua.nat.Native;
+import net.refinedsolution.resource.Resource;
 import net.refinedsolution.simulation.*;
 import net.refinedsolution.util.GUID;
 
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * This class contains native functions related to RefineX resource simulation.
@@ -35,7 +34,9 @@ public class SIM {
                 sim.getContext().getWorld()
         );
         sim.getServer().connect(client);
-
+        for (Resource res : sim.getResources()) {
+            sim.getContext().getResourceLoader().start(client, res);
+        }
         return new CInt(client.getClientId());
     }
 
@@ -55,9 +56,7 @@ public class SIM {
     public static void Async(Runner runner, CFunction func) {
         Thread t = new Thread(() -> {
             func.get().invoke();
-            RefineX.onThreadFinish(Thread.currentThread());
         });
-        RefineX.threadRegister.add(t);
         t.start();
     }
 
@@ -67,5 +66,21 @@ public class SIM {
             throw new IllegalArgumentException("Simulation does not exist");
         Simulation sim = (Simulation) GUID.identify(simId.get(), Simulation.class);
         sim.tick(delta.get());
+    }
+
+    @Native
+    public static CBool RefxSimHasErrors(Runner runner, CInt simId) {
+        if (!GUID.has(simId.get(), Simulation.class))
+            throw new IllegalArgumentException("Simulation does not exist");
+        Simulation sim = (Simulation) GUID.identify(simId.get(), Simulation.class);
+        return new CBool(sim.hasIssues());
+    }
+
+    @Native
+    public static void RefxSimPostProcess(Runner runner, CInt simId) {
+        if (!GUID.has(simId.get(), Simulation.class))
+            throw new IllegalArgumentException("Simulation does not exist");
+        Simulation sim = (Simulation) GUID.identify(simId.get(), Simulation.class);
+        sim.postProcess();
     }
 }

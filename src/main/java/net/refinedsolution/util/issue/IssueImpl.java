@@ -66,6 +66,6 @@ public class IssueImpl implements Issue {
         return Color.WHITE.ascii() + "[" + this.severity.getColor().ascii() + this.severity + Color.WHITE.ascii() +
                 "] [" + this.severity.getColor().ascii() + this.environmentName + Color.WHITE.ascii() + "] " +
                 this.severity.getColor().ascii() + this.message + ".\n    Try to " + this.fixSuggestion +
-                " (@" + this.trace[0] + ")";
+                " (@" + this.trace[0] + ")" + Color.RESET.ascii();
     }
 }
