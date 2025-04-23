@@ -1,5 +1,6 @@
 package net.refinedsolution.simulation;
 
+import net.refinedsolution.database.Database;
 import net.refinedsolution.resource.Resource;
 import net.refinedsolution.util.Idable;
 import net.refinedsolution.util.issue.Issue;
@@ -78,4 +79,11 @@ public interface Simulation extends Idable {
      * @param delta the delta time since the last tick
      */
     void tick(double delta);
+
+    /**
+     * Returns the database that should be used for this simulation
+     *
+     * @return the database that should be used for this simulation
+     */
+    @NotNull Database getDatabase();
 }

@@ -1,5 +1,7 @@
 package net.refinedsolution.simulation;
 
+import net.refinedsolution.database.Database;
+import net.refinedsolution.database.DatabaseImpl;
 import net.refinedsolution.resource.Resource;
 import net.refinedsolution.util.GUID;
 import net.refinedsolution.util.issue.Issue;
@@ -21,6 +23,7 @@ public class SimulationImpl implements Simulation, IssueLog, IssueLogger {
     private final SimulationContext context;
     private final String name;
     private final List<Issue> issues = new ArrayList<>();
+    private final Database database = new DatabaseImpl();
 
     public SimulationImpl(SimulationContext context, String name) {
         this.id = GUID.identify(this);
@@ -118,5 +121,10 @@ public class SimulationImpl implements Simulation, IssueLog, IssueLogger {
         for (Client client : this.clients) {
             client.tick(delta);
         }
+    }
+
+    @Override
+    public @NotNull Database getDatabase() {
+        return this.database;
     }
 }
