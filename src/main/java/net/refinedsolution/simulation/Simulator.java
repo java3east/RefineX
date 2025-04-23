@@ -39,8 +39,9 @@ public interface Simulator extends Idable {
     /**
      * Sends this event to all Runners of this simulator
      * @param event the event to send
+     * @return true if a handler was found
      */
-    void dispatchEvent(@NotNull Event event);
+    boolean dispatchEvent(@NotNull Event event);
 
     /**
      * Performs a tick for this simulator

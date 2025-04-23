@@ -22,7 +22,7 @@ local function trimToResourcePath(fullPath)
     if startIndex then
         return fullPath:sub(startIndex)
     end
-    return fullPath -- Return the original path if REFX_RESOURCE_PATH is not found
+    return fullPath
 end
 
 ---@param name string
@@ -67,10 +67,15 @@ end
 
 ---@param event vevent
 function REFX_DISPATCH_EVENT(event, instant)
+    if listeners[event.name] == nil then
+        return false
+    end
+
     if not instant then
         table.insert(waiting, event)
-        return
+        return true
     end
 
     process(event)
+    return true
 end

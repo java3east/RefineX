@@ -8,6 +8,10 @@ import org.jetbrains.annotations.NotNull;
 import java.nio.file.Paths;
 import java.util.*;
 
+/**
+ * This class represents a manifest for Helix packages.
+ * @author Java3east
+ */
 public class HelixManifest implements Manifest {
     private final HashMap<String, List<String>> meta = new HashMap<>();
 

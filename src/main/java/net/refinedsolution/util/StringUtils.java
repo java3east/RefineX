@@ -2,6 +2,10 @@ package net.refinedsolution.util;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Utility class for string operations.
+ * @author Java3east
+ */
 public class StringUtils {
     /**
      * Returns a string of fixed length. If the string is shorter than the specified length, it will be padded with spaces.

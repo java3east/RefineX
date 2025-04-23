@@ -9,7 +9,6 @@ import org.jetbrains.annotations.Nullable;
 import org.luaj.vm2.LuaValue;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -77,11 +76,15 @@ public class ServerImpl implements Server {
     }
 
     @Override
-    public void dispatchEvent(@NotNull Event event) {
-        LuaValue val = Value.of(event);
+    public boolean dispatchEvent(@NotNull Event event) {
+        boolean ok = false;
         for (Runner runner : runners.values()) {
-            runner.getGlobals().get("REFX_DISPATCH_EVENT").call(Value.of(val));
+            LuaValue ret = runner.getGlobals().get("REFX_DISPATCH_EVENT").call(Value.of(event));
+            if (ret.checkboolean()) {
+                ok = true;
+            }
         }
+        return ok;
     }
 
     @Override

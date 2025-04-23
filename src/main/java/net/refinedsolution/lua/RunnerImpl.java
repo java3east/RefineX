@@ -17,6 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * This class implements the Runner interface and provides methods to load Lua scripts and call Lua functions.
+ * @author Java3east
+ */
 public class RunnerImpl implements Runner {
 
     private final long id;

@@ -6,6 +6,10 @@ import net.refinedsolution.context.helix.HelixResourceLoader;
 import net.refinedsolution.context.helix.HelixWorld;
 import net.refinedsolution.resource.ResourceLoader;
 
+/**
+ * Simulation context, contains the scripts paths that need to be loaded
+ * @author Java3east
+ */
 public enum SimulationContext {
     FIVEM(new String[] {
 

@@ -15,8 +15,9 @@ public class TraceEntry {
      * @param file the file name
      */
     @ACastable.Field(name = "file")
-    public void setFile(@NotNull CString file) {
+    public TraceEntry setFile(@NotNull CString file) {
         this.file = file.get();
+        return this;
     }
 
     /**
@@ -24,8 +25,9 @@ public class TraceEntry {
      * @param line the line
      */
     @ACastable.Field(name = "line")
-    public void setLine(@NotNull CInt line) {
+    public TraceEntry setLine(@NotNull CInt line) {
         this.line = line.get();
+        return this;
     }
 
     /**

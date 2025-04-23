@@ -4,6 +4,10 @@ import net.refinedsolution.simulation.Simulator;
 import net.refinedsolution.simulation.World;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * This class represents a world in the FiveM simulator.
+ * @author Java3east
+ */
 public class FivemWorld implements World {
     private Simulator simulator;
 
