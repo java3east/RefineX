@@ -26,4 +26,24 @@ public interface Database {
      * @return the connection to the database
      */
     @NotNull Connection connect();
+
+    /**
+     * Closes the current established connection to the database.
+     * This will do nothing if there is no open connection.
+     */
+    void closeConnection();
+
+    /**
+     * Attempts to connect to the database.
+     * @return true if the connection was successful, false otherwise
+     */
+    boolean testConnection();
+
+    /**
+     * Runs the given SQL statement with the given arguments.
+     * This is a simple way to execute SQL statements without returning any results.
+     * @param sql the sql statement to execute
+     * @param args the arguments to pass to the statement
+     */
+    void execute(String sql, Object[] args);
 }

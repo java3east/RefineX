@@ -1,5 +1,6 @@
 package net.refinedsolution.lua;
 
+import net.refinedsolution.database.Database;
 import net.refinedsolution.simulation.Simulator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -67,4 +68,10 @@ public interface Runner {
      * @return the simulator this runner is running in
      */
     Optional<Simulator> getSimulator();
+
+    /**
+     * Returns the database of the simulation of this runner.
+     * @return the database.
+     */
+    Optional<Database> getDatabase();
 }

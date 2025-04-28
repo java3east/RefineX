@@ -1,5 +1,6 @@
 package net.refinedsolution.lua;
 
+import net.refinedsolution.database.Database;
 import net.refinedsolution.lua.nat.Call;
 import net.refinedsolution.lua.nat.Exists;
 import net.refinedsolution.lua.nat.NativeReference;
@@ -102,5 +103,11 @@ public class RunnerImpl implements Runner {
     @Override
     public Optional<Simulator> getSimulator() {
         return this.simulator;
+    }
+
+    @Override
+    public Optional<Database> getDatabase() {
+        if (this.getSimulator().isEmpty()) return Optional.empty();
+        return Optional.of(this.getSimulator().get().getSimulation().getDatabase());
     }
 }

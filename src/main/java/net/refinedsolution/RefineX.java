@@ -1,12 +1,17 @@
 package net.refinedsolution;
 
 import net.refinedsolution.context.refex.natives.TEST;
+import net.refinedsolution.database.Database;
+import net.refinedsolution.database.DatabaseImpl;
 import net.refinedsolution.lua.RunnerImpl;
 import net.refinedsolution.context.refex.natives.SIM;
+import net.refinedsolution.util.Color;
 import net.refinedsolution.util.Marker;
 import net.refinedsolution.util.issue.*;
 
 import java.io.File;
+import java.net.ConnectException;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +49,16 @@ public class RefineX {
     public static void main(String[] args) {
         if (args.length == 0) {
             System.out.println("Usage: RefineX <path>");
+            return;
+        }
+
+        Database db = new DatabaseImpl();
+        if (db.testConnection())
+            System.out.println(Color.WHITE.ascii() + "[" + Color.GREEN.ascii() + "RefineX" + Color.WHITE.ascii() + "] "
+                    + Color.GREEN.ascii() + "Connected to database: " + db.getDatabaseName());
+        else {
+            System.out.println(Color.WHITE.ascii() + "[" + Color.RED.ascii() + "RefineX" + Color.WHITE.ascii() + "] "
+                    + Color.RED.ascii() + "Failed to connect to database: " + db.getDatabaseName());
             return;
         }
 
