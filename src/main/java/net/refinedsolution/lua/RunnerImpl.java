@@ -1,6 +1,7 @@
 package net.refinedsolution.lua;
 
 import net.refinedsolution.database.Database;
+import net.refinedsolution.lua.castable.CCastable;
 import net.refinedsolution.lua.nat.Call;
 import net.refinedsolution.lua.nat.Exists;
 import net.refinedsolution.lua.nat.NativeReference;
@@ -109,5 +110,18 @@ public class RunnerImpl implements Runner {
     public Optional<Database> getDatabase() {
         if (this.getSimulator().isEmpty()) return Optional.empty();
         return Optional.of(this.getSimulator().get().getSimulation().getDatabase());
+    }
+
+    @Override
+    public Optional<CCastable<?>> getValue(@NotNull String name, @NotNull Class<? extends CCastable<?>> type) {
+        String[] parts = name.split("\\.");
+        LuaValue value = this.globals;
+        for (String part : parts) {
+            value = value.get(part);
+            if (value.isnil()) {
+                return Optional.empty();
+            }
+        }
+        return Optional.of((CCastable<?>) Value.castTo(value, type));
     }
 }

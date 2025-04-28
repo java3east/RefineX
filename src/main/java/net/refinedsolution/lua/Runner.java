@@ -1,6 +1,7 @@
 package net.refinedsolution.lua;
 
 import net.refinedsolution.database.Database;
+import net.refinedsolution.lua.castable.CCastable;
 import net.refinedsolution.simulation.Simulator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -74,4 +75,11 @@ public interface Runner {
      * @return the database.
      */
     Optional<Database> getDatabase();
+
+    /**
+     * Returns the value of the given variable in this runner.
+     * @param name the name of the variable to get. This can contain namespaces (e.g. "namespace1.namespace2.variable")
+     * @return the value of the variable
+     */
+    Optional<CCastable<?>> getValue(@NotNull String name, @NotNull Class<? extends CCastable<?>> type);
 }
