@@ -1,5 +1,7 @@
 package net.refinedsolution.util.async;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * A syncronizable object is an object that can be executed in sync or async.
  * @author Java3east
@@ -11,7 +13,7 @@ public class SyncronizeableImpl implements Syncronizeable {
      * Creates a new syncronizable object with the given runnable.
      * @param runnable the runnable to execute
      */
-    public SyncronizeableImpl(Runnable runnable) {
+    public SyncronizeableImpl(@NotNull Runnable runnable) {
         this.runnable = runnable;
     }
 
@@ -26,7 +28,7 @@ public class SyncronizeableImpl implements Syncronizeable {
     }
 
     @Override
-    public void async(Runnable runnable) {
+    public void async(@NotNull Runnable runnable) {
         new Thread(()->{
             this.runnable.run();
             runnable.run();

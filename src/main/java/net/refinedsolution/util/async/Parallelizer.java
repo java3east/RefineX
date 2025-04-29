@@ -20,7 +20,7 @@ public class Parallelizer {
     /**
      * Returns a syncronizeable object that can be used to execute the given runnable in sync or async.
      */
-    public Syncronizeable start() {
+    public @NotNull Syncronizeable start() {
         return new SyncronizeableImpl(() -> {
             Thread[] threads = new Thread[runnable.length];
             for (int i = 0; i < runnable.length; i++) {

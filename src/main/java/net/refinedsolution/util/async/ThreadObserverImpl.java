@@ -1,5 +1,7 @@
 package net.refinedsolution.util.async;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,12 +15,12 @@ public class ThreadObserverImpl implements ThreadObserver {
     private final List<Thread> threads = new ArrayList<>();
 
     @Override
-    public void observe(Thread thread) {
+    public void observe(@NotNull Thread thread) {
         threads.add(thread);
     }
 
     @Override
-    public void observe(ThreadObserver observer) {
+    public void observe(@NotNull ThreadObserver observer) {
         this.observers.add(observer);
     }
 

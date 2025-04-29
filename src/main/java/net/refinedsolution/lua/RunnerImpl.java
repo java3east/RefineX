@@ -111,12 +111,12 @@ public class RunnerImpl implements Runner {
     }
 
     @Override
-    public void observe(Thread thread) {
+    public void observe(@NotNull Thread thread) {
         this.observer.observe(thread);
     }
 
     @Override
-    public void observe(ThreadObserver observer) {
+    public void observe(@NotNull ThreadObserver observer) {
         this.observer.observe(observer);
     }
 
