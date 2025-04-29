@@ -3,42 +3,24 @@ package net.refinedsolution;
 import net.refinedsolution.context.refex.natives.TEST;
 import net.refinedsolution.lua.RunnerImpl;
 import net.refinedsolution.context.refex.natives.SIM;
-import net.refinedsolution.util.Marker;
-import net.refinedsolution.util.issue.*;
+import net.refinedsolution.util.async.ThreadObserver;
+import net.refinedsolution.util.async.ThreadObserverImpl;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Main entry point for RefineX
  * @author Java3east
  */
 public class RefineX {
-    public static final IssueManager manager = new IssueManager();
-    public static List<Thread> threadRegister = new ArrayList<>();
-    public static boolean useMarkers = false;
-    public static HashMap<String, Marker> markers = new HashMap<>();
+    private static final ThreadObserver observer = new ThreadObserverImpl();
 
-    public static void onThreadFinish(Thread thread) {
-        threadRegister.remove(thread);
-        if (threadRegister.isEmpty()) {
-            for (String key : markers.keySet()) {
-                Marker marker = markers.get(key);
-                if (marker != null && !marker.isReached()) {
-                    Issue issue = new IssueImpl(
-                            IssueLevel.WARNING,
-                            "Function '" + marker.getFunctionName() + "' was never reached",
-                            "RefineX", new TraceEntry[]{ marker.getTrace() },
-                            "delete the function or call it"
-                    );
-                    manager.log(issue);
-                    System.out.println(issue);
-                }
-            }
-            System.exit(manager.getIssues().length);
-        }
+    /**
+     * Adds a new Observer to the list of observers that have to finish before the program exits.
+     * @param observer the observer to add
+     */
+    public static void observe(ThreadObserver observer) {
+        observer.observe(observer);
     }
 
     public static void main(String[] args) {
@@ -61,5 +43,7 @@ public class RefineX {
         runner.loadFile("./lib/simulation.lua");
         runner.loadFile("./lib/test.lua");
         runner.loadFile(path);
+
+        observer.await();
     }
 }

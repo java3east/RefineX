@@ -1,6 +1,7 @@
 package net.refinedsolution.lua;
 
 import net.refinedsolution.simulation.Simulator;
+import net.refinedsolution.util.async.ThreadObserver;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.luaj.vm2.Globals;
@@ -15,7 +16,7 @@ import java.util.Optional;
  * A runner can execute Lua code. It also contains a working directory and an uniq identifying id.
  * @author Java3east
  */
-public interface Runner {
+public interface Runner extends ThreadObserver {
     /**
      * Returns the id of this runner.
      * Ids should be unique for each runner.

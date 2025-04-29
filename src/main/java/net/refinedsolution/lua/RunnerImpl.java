@@ -1,10 +1,13 @@
 package net.refinedsolution.lua;
 
+import net.refinedsolution.RefineX;
 import net.refinedsolution.lua.nat.Call;
 import net.refinedsolution.lua.nat.Exists;
 import net.refinedsolution.lua.nat.NativeReference;
 import net.refinedsolution.simulation.Simulator;
 import net.refinedsolution.util.GUID;
+import net.refinedsolution.util.async.ThreadObserver;
+import net.refinedsolution.util.async.ThreadObserverImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.luaj.vm2.Globals;
@@ -28,6 +31,7 @@ public class RunnerImpl implements Runner {
     private final File directory;
     private final List<Class<?>> namespaces = new ArrayList<>();
     private final Optional<Simulator> simulator;
+    private final ThreadObserver observer = new ThreadObserverImpl();
 
     /**
      * Creates a new default runner.
@@ -40,6 +44,7 @@ public class RunnerImpl implements Runner {
         this.globals.set("REFX_CALL", new Call());
         this.directory = new File(System.getProperty("user.dir"));
         this.simulator = Optional.empty();
+        RefineX.observe(this);
     }
 
     public RunnerImpl(@NotNull Simulator simulator) {
@@ -50,6 +55,7 @@ public class RunnerImpl implements Runner {
         this.globals.set("REFX_CALL", new Call());
         this.directory = new File(System.getProperty("user.dir"));
         this.simulator = Optional.of(simulator);
+        RefineX.observe(this);
     }
 
     /**
@@ -102,5 +108,20 @@ public class RunnerImpl implements Runner {
     @Override
     public Optional<Simulator> getSimulator() {
         return this.simulator;
+    }
+
+    @Override
+    public void observe(Thread thread) {
+        this.observer.observe(thread);
+    }
+
+    @Override
+    public void observe(ThreadObserver observer) {
+        this.observer.observe(observer);
+    }
+
+    @Override
+    public void await() {
+        this.observer.await();
     }
 }

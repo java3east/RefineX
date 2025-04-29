@@ -53,12 +53,10 @@ public class SIM {
 
     @Native
     public static void Async(Runner runner, CFunction func) {
-        Thread t = new Thread(() -> {
+        Thread thread = new Thread(() -> {
             func.get().invoke();
-            RefineX.onThreadFinish(Thread.currentThread());
         });
-        RefineX.threadRegister.add(t);
-        t.start();
+        runner.observe(thread);
     }
 
     @Native
