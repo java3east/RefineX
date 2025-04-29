@@ -2,11 +2,14 @@ package net.refinedsolution.lua;
 
 import net.refinedsolution.simulation.Simulator;
 import net.refinedsolution.util.async.ThreadObserver;
+import net.refinedsolution.util.guid.GUID;
+import net.refinedsolution.util.guid.GUIDHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.Varargs;
+import org.luaj.vm2.lib.jse.JsePlatform;
 
 import java.io.File;
 import java.util.List;
@@ -16,13 +19,59 @@ import java.util.Optional;
  * A runner can execute Lua code. It also contains a working directory and an uniq identifying id.
  * @author Java3east
  */
-public interface Runner extends ThreadObserver {
-    /**
-     * Returns the id of this runner.
-     * Ids should be unique for each runner.
-     * @return the unique id of this runner.
-     */
-    long getId();
+public interface Runner extends ThreadObserver, GUIDHolder {
+
+    static Runner empty() {
+        return new Runner() {
+            @Override
+            public @NotNull Globals getGlobals() {
+                return JsePlatform.standardGlobals();
+            }
+
+            @Override
+            public void loadStr(@NotNull String string) { }
+
+            @Override
+            public void loadFile(@NotNull String filename) { }
+
+            @Override
+            public @NotNull File getLocalDirectory() {
+                return new File(System.getProperty("user.dir"));
+            }
+
+            @Override
+            public @NotNull List<Class<?>> getNamespaces() {
+                return List.of();
+            }
+
+            @Override
+            public @NotNull LuaValue call(@Nullable Object o, @NotNull String mName, @NotNull Varargs varargs) {
+                return LuaValue.NIL;
+            }
+
+            @Override
+            public Optional<Simulator> getSimulator() {
+                return Optional.empty();
+            }
+
+            @Override
+            public void observe(@NotNull Thread thread) { }
+
+            @Override
+            public void observe(@NotNull ThreadObserver observer) { }
+
+            @Override
+            public void await() { }
+
+            @Override
+            public void setGUID(@NotNull GUID guid) { }
+
+            @Override
+            public @NotNull GUID getGUID() {
+                return new GUID(0L);
+            }
+        };
+    }
 
     /**
      * Returns the Globals for this runner.

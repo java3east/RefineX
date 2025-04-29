@@ -2,7 +2,7 @@ package net.refinedsolution.lua.nat;
 
 import net.refinedsolution.lua.Runner;
 import net.refinedsolution.lua.Value;
-import net.refinedsolution.util.GUID;
+import net.refinedsolution.util.guid.GUID;
 import org.luaj.vm2.Varargs;
 import org.luaj.vm2.lib.VarArgFunction;
 

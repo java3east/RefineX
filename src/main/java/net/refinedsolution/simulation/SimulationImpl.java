@@ -1,8 +1,7 @@
 package net.refinedsolution.simulation;
 
-import net.refinedsolution.RefineX;
 import net.refinedsolution.resource.Resource;
-import net.refinedsolution.util.GUID;
+import net.refinedsolution.util.guid.GUID;
 import net.refinedsolution.util.issue.Issue;
 import net.refinedsolution.util.issue.IssueLog;
 import net.refinedsolution.util.issue.IssueLogger;
@@ -124,5 +123,15 @@ public class SimulationImpl implements Simulation, IssueLog, IssueLogger {
         for (Client client : this.clients) {
             client.tick(delta);
         }
+    }
+
+    @Override
+    public void setGUID(@NotNull GUID guid) {
+
+    }
+
+    @Override
+    public @NotNull GUID getGUID() {
+        return null;
     }
 }

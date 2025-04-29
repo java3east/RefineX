@@ -3,7 +3,7 @@ package net.refinedsolution.simulation;
 import net.refinedsolution.lua.Runner;
 import net.refinedsolution.lua.Value;
 import net.refinedsolution.resource.Resource;
-import net.refinedsolution.util.GUID;
+import net.refinedsolution.util.guid.GUID;
 import org.jetbrains.annotations.NotNull;
 import org.luaj.vm2.LuaValue;
 

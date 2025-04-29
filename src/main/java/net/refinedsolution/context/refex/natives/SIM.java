@@ -1,6 +1,5 @@
 package net.refinedsolution.context.refex.natives;
 
-import net.refinedsolution.RefineX;
 import net.refinedsolution.lua.Runner;
 import net.refinedsolution.lua.castable.CDouble;
 import net.refinedsolution.lua.castable.CFunction;
@@ -8,7 +7,7 @@ import net.refinedsolution.lua.castable.CInt;
 import net.refinedsolution.lua.castable.CString;
 import net.refinedsolution.lua.nat.Native;
 import net.refinedsolution.simulation.*;
-import net.refinedsolution.util.GUID;
+import net.refinedsolution.util.guid.GUID;
 
 import java.nio.file.Path;
 import java.util.Arrays;

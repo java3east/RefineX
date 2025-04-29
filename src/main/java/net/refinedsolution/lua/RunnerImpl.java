@@ -5,7 +5,7 @@ import net.refinedsolution.lua.nat.Call;
 import net.refinedsolution.lua.nat.Exists;
 import net.refinedsolution.lua.nat.NativeReference;
 import net.refinedsolution.simulation.Simulator;
-import net.refinedsolution.util.GUID;
+import net.refinedsolution.util.guid.GUID;
 import net.refinedsolution.util.async.ThreadObserver;
 import net.refinedsolution.util.async.ThreadObserverImpl;
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +26,7 @@ import java.util.Optional;
  */
 public class RunnerImpl implements Runner {
 
-    private final long id;
+    private GUID guid;
     private final Globals globals;
     private final File directory;
     private final List<Class<?>> namespaces = new ArrayList<>();
@@ -37,9 +37,9 @@ public class RunnerImpl implements Runner {
      * Creates a new default runner.
      */
     public RunnerImpl() {
-        this.id = GUID.identify(this);
+        GUID.register(this);
         this.globals = JsePlatform.debugGlobals();
-        this.globals.set("REFX_ID", this.id);
+        this.globals.set("REFX_ID", guid.lua());
         this.globals.set("REFX_FIND", new Exists());
         this.globals.set("REFX_CALL", new Call());
         this.directory = new File(System.getProperty("user.dir"));
@@ -48,9 +48,9 @@ public class RunnerImpl implements Runner {
     }
 
     public RunnerImpl(@NotNull Simulator simulator) {
-        this.id = GUID.identify(this);
+        GUID.register(this);
         this.globals = JsePlatform.debugGlobals();
-        this.globals.set("REFX_ID", this.id);
+        this.globals.set("REFX_ID", guid.lua());
         this.globals.set("REFX_FIND", new Exists());
         this.globals.set("REFX_CALL", new Call());
         this.directory = new File(System.getProperty("user.dir"));
@@ -64,11 +64,6 @@ public class RunnerImpl implements Runner {
      */
     public void addNamespace(Class<?> namespace) {
         namespaces.add(namespace);
-    }
-
-    @Override
-    public long getId() {
-        return this.id;
     }
 
     @Override
@@ -123,5 +118,15 @@ public class RunnerImpl implements Runner {
     @Override
     public void await() {
         this.observer.await();
+    }
+
+    @Override
+    public void setGUID(@NotNull GUID guid) {
+
+    }
+
+    @Override
+    public @NotNull GUID getGUID() {
+        return this.guid;
     }
 }

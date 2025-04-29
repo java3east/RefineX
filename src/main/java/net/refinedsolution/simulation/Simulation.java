@@ -1,7 +1,7 @@
 package net.refinedsolution.simulation;
 
 import net.refinedsolution.resource.Resource;
-import net.refinedsolution.util.Idable;
+import net.refinedsolution.util.guid.GUIDHolder;
 import net.refinedsolution.util.issue.Issue;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,7 +13,7 @@ import java.util.Optional;
  * A simulation of a client - server environment.
  * @author Java3east
  */
-public interface Simulation extends Idable {
+public interface Simulation extends GUIDHolder {
     /**
      * Returns the server of this environment
      * @return the server of this environment
