@@ -1,14 +1,13 @@
 package net.refinedsolution.context.refex.natives;
 
-import net.refinedsolution.lua.Runner;
+import net.refinedsolution.lua.LuaInterface;
 import net.refinedsolution.lua.castable.CString;
 import net.refinedsolution.lua.nat.Native;
 import net.refinedsolution.simulation.Client;
-import net.refinedsolution.util.Color;
-import net.refinedsolution.util.StringUtils;
+import net.refinedsolution.util.console.Color;
+import net.refinedsolution.util.utils.StringUtils;
 import net.refinedsolution.util.issue.Issue;
-import net.refinedsolution.util.issue.IssueImpl;
-import net.refinedsolution.util.issue.IssueLevel;
+import net.refinedsolution.util.issue.Severity;
 import net.refinedsolution.util.issue.TraceEntry;
 
 /**
@@ -17,7 +16,7 @@ import net.refinedsolution.util.issue.TraceEntry;
  */
 public class REFX {
     @Native
-    public static void REFX_PRINT(Runner runner, CString[] args) {
+    public static void REFX_PRINT(LuaInterface runner, CString[] args) {
         StringBuilder sb = new StringBuilder();
         for (CString arg : args) {
             sb.append(arg.get()).append(" ");
@@ -37,22 +36,7 @@ public class REFX {
     }
 
     @Native
-    public static void REFX_ERROR(Runner runner, IssueLevel level, CString msg, CString fix, TraceEntry[] trace) {
-        String simName = runner.getSimulator().isPresent() ?
-                runner.getSimulator().get().getSimulation().getName() : "RefineX";
-
-        String[] errParts = msg.get().split(" ");
-        StringBuilder sb = new StringBuilder();
-        for (int i = 1; i < errParts.length; i++) {
-            sb.append(errParts[i]).append(" ");
-        }
-
-        if (fix.get().equals("?") && sb.toString().trim().equals("attempt to call nil"))
-            fix = new CString("check for nil");
-
-        Issue issue = new IssueImpl(level, sb.toString().trim(), simName, trace, fix.get());
-        System.out.println(issue);
-
-        runner.getSimulator().ifPresent(sim -> sim.getSimulation().log(issue));
+    public static void REFX_ERROR(LuaInterface runner, Severity level, CString msg, CString fix, TraceEntry[] trace) {
+        // TODO
     }
 }

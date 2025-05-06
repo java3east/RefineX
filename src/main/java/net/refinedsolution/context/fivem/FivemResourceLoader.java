@@ -1,5 +1,7 @@
 package net.refinedsolution.context.fivem;
 
+import net.refinedsolution.lua.LuaInterface;
+import net.refinedsolution.lua.LuaInterfaceImpl;
 import net.refinedsolution.resource.Resource;
 import net.refinedsolution.resource.ResourceImpl;
 import net.refinedsolution.resource.ResourceLoader;
@@ -21,6 +23,7 @@ public class FivemResourceLoader implements ResourceLoader {
     }
 
     @Override
-    public void start(@NotNull Simulator simulator, @NotNull Resource resource) {
+    public @NotNull LuaInterface start(@NotNull Simulator simulator, @NotNull Resource resource) {
+        return new LuaInterfaceImpl();
     }
 }

@@ -1,8 +1,11 @@
 package net.refinedsolution.simulation;
 
-import net.refinedsolution.lua.Runner;
+import net.refinedsolution.context.helix.HelixResourceLoader;
+import net.refinedsolution.lua.LuaInterface;
 import net.refinedsolution.lua.Value;
 import net.refinedsolution.resource.Resource;
+import net.refinedsolution.resource.ResourceManager;
+import net.refinedsolution.resource.ResourceManagerImpl;
 import net.refinedsolution.util.guid.GUID;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,10 +20,9 @@ import java.util.List;
  * @author Java3east
  */
 public class ServerImpl implements Server {
-    private final long id;
     private final Simulation simulation;
     private int nextClientId = 1;
-    private final HashMap<Resource, Runner> runners = new HashMap<>();
+    private final HashMap<Resource, LuaInterface> runners = new HashMap<>();
     private final World world;
 
     /**
@@ -28,7 +30,6 @@ public class ServerImpl implements Server {
      * @param simulation the simulation this simulated server belongs to
      */
     public ServerImpl(Simulation simulation, World world) {
-        this.id = GUID.identify(this);
         this.simulation = simulation;
         this.world = world;
     }
@@ -40,8 +41,6 @@ public class ServerImpl implements Server {
 
     @Override
     public @Nullable Client getClient(int id) {
-        for (Client c : getClients())
-            if (c.getId() == id) return c;
         return null;
     }
 
@@ -56,18 +55,13 @@ public class ServerImpl implements Server {
     }
 
     @Override
+    public @NotNull ResourceManager getResourceManager() {
+        return new ResourceManagerImpl(this, new HelixResourceLoader());
+    }
+
+    @Override
     public @NotNull Simulation getSimulation() {
         return this.simulation;
-    }
-
-    @Override
-    public void addResource(@NotNull Resource resource, @NotNull Runner runner) {
-        this.runners.put(resource, runner);
-    }
-
-    @Override
-    public Runner getRunner(@NotNull Resource resource) {
-        return this.runners.get(resource);
     }
 
     @Override
@@ -77,25 +71,10 @@ public class ServerImpl implements Server {
 
     @Override
     public boolean dispatchEvent(@NotNull Event event) {
-        boolean ok = false;
-        for (Runner runner : runners.values()) {
-            LuaValue ret = runner.getGlobals().get("REFX_DISPATCH_EVENT").call(Value.of(event));
-            if (ret.checkboolean()) {
-                ok = true;
-            }
-        }
-        return ok;
+        return false;
     }
 
     @Override
     public void tick(double delta) {
-        for (Runner runner : runners.values()) {
-            runner.getGlobals().get("REFX_TICK").call(Value.of(delta));
-        }
-    }
-
-    @Override
-    public long getId() {
-        return this.id;
     }
 }

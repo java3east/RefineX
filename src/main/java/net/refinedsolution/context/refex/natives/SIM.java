@@ -1,6 +1,6 @@
 package net.refinedsolution.context.refex.natives;
 
-import net.refinedsolution.lua.Runner;
+import net.refinedsolution.lua.LuaInterface;
 import net.refinedsolution.lua.castable.CDouble;
 import net.refinedsolution.lua.castable.CFunction;
 import net.refinedsolution.lua.castable.CInt;
@@ -18,51 +18,30 @@ import java.util.Arrays;
  */
 public class SIM {
     @Native
-    public static CInt CreateSimulation(Runner runner, SimulationContext context, CString name) {
+    public static CInt CreateSimulation(LuaInterface runner, SimulationContext context, CString name) {
         SimulationImpl sim = new SimulationImpl(context, name.get());
-        return new CInt((int) sim.getId());
+        // TODO
+        return new CInt((int) 0);
     }
 
     @Native
-    public static CInt AddSimulatedClient(Runner runner, CInt simulation, CString[] identifiers) {
-        if (!GUID.has(simulation.get(), Simulation.class))
-            throw new IllegalArgumentException("Simulation does not exist");
-
-        Simulation sim = (Simulation) GUID.identify(simulation.get(), Simulation.class);
-        ClientImpl client = new ClientImpl(
-                sim.getServer(), Arrays.stream(identifiers).map(CString::get).toArray(String[]::new),
-                sim.getContext().getWorld()
-        );
-        sim.getServer().connect(client);
-
-        return new CInt(client.getClientId());
+    public static CInt AddSimulatedClient(LuaInterface runner, CInt simulation, CString[] identifiers) {
+        return new CInt(0);
     }
 
     @Native
-    public static void LoadResource(Runner runner, CInt simulation, CString path) {
-        Simulation sim = (Simulation) GUID.identify(simulation.get(), Simulation.class);
-        sim.load(Path.of(path.get()));
+    public static void LoadResource(LuaInterface runner, CInt simulation, CString path) {
     }
 
     @Native
-    public static void StartResource(Runner runner, CInt simulation, CString name) {
-        Simulation sim = (Simulation) GUID.identify(simulation.get(), Simulation.class);
-        sim.start(name.get());
+    public static void StartResource(LuaInterface runner, CInt simulation, CString name) {
     }
 
     @Native
-    public static void Async(Runner runner, CFunction func) {
-        Thread thread = new Thread(() -> {
-            func.get().invoke();
-        });
-        runner.observe(thread);
+    public static void Async(LuaInterface runner, CFunction func) {
     }
 
     @Native
-    public static void REFX_TICK(Runner runner, CInt simId, CDouble delta) {
-        if (!GUID.has(simId.get(), Simulation.class))
-            throw new IllegalArgumentException("Simulation does not exist");
-        Simulation sim = (Simulation) GUID.identify(simId.get(), Simulation.class);
-        sim.tick(delta.get());
+    public static void REFX_TICK(LuaInterface runner, CInt simId, CDouble delta) {
     }
 }

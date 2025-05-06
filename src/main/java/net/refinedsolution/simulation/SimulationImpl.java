@@ -18,7 +18,6 @@ import java.util.stream.Stream;
  * @author Java3east
  */
 public class SimulationImpl implements Simulation, IssueLog, IssueLogger {
-    private final long id;
     private final Server server;
     private final List<Client> clients = new ArrayList<>();
     private final List<Resource> resources = new ArrayList<>();
@@ -27,7 +26,6 @@ public class SimulationImpl implements Simulation, IssueLog, IssueLogger {
     private final List<Issue> issues = new ArrayList<>();
 
     public SimulationImpl(SimulationContext context, String name) {
-        this.id = GUID.identify(this);
         this.server = new ServerImpl(this, context.getWorld());
         this.context = context;
         this.name = name;
@@ -97,11 +95,6 @@ public class SimulationImpl implements Simulation, IssueLog, IssueLogger {
     }
 
     @Override
-    public long getId() {
-        return this.id;
-    }
-
-    @Override
     public @NotNull Issue[] getIssues() {
         return this.issues.toArray(new Issue[0]);
     }
@@ -123,15 +116,5 @@ public class SimulationImpl implements Simulation, IssueLog, IssueLogger {
         for (Client client : this.clients) {
             client.tick(delta);
         }
-    }
-
-    @Override
-    public void setGUID(@NotNull GUID guid) {
-
-    }
-
-    @Override
-    public @NotNull GUID getGUID() {
-        return null;
     }
 }

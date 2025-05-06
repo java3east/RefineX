@@ -1,20 +1,15 @@
 package net.refinedsolution.lua;
 
 import net.refinedsolution.lua.castable.CCastable;
+import net.refinedsolution.util.issue.TraceEntry;
 import org.jetbrains.annotations.NotNull;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.Varargs;
 import org.luaj.vm2.lib.VarArgFunction;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.*;
+import java.util.*;
 
 /**
  * Lua value converter.
@@ -117,88 +112,100 @@ public class Value {
         return values;
     }
 
-    /**
-     * Creates a new object of the given class from the given value
-     * @param value the lua value to create the table from
-     * @param clazz the class to build the object from
-     * @return the created object
-     *
-     * @throws ClassCastException if there is no valid constructor and the given value is not a table
-     */
-    private static @NotNull Object createObject(@NotNull LuaValue value, Class<?> clazz)
-            throws InstantiationException, IllegalAccessException, InvocationTargetException {
-        if (clazz == CCastable.class) {
-            clazz = castables.getOrDefault(value.getClass(), (Class<? extends CCastable<?>>) clazz);
+    private static Constructor<?> findConstructor(Class<?> clazz) {
+        try {
+            return clazz.getConstructor();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-
-        for (Constructor<?> constructor : clazz.getConstructors()) {
-            if (constructor.isAnnotationPresent(ACastable.Direct.class)) {
-                return constructor.newInstance(value);
-            }
-        }
-
-        if (!value.istable()) throw new ClassCastException("Cannot cast " + clazz + " to " + value.getClass());
-        LuaTable tbl = value.checktable();
-
-        Object instance = clazz.newInstance();
-        for (Method method : clazz.getMethods()) {
-            if (method.isAnnotationPresent(ACastable.Field.class)) {
-                String name = method.getAnnotation(ACastable.Field.class).name();
-                if (tbl.get(name) != null && !tbl.get(name).equals(LuaValue.NIL)) {
-                    Object param = castTo(tbl.get(name), method.getParameterTypes()[0]);
-                    method.invoke(instance, param);
-                }
-            }
-        }
-        return instance;
     }
 
-    /**
-     * Tries to cast the given lua value to the given class.
-     * @param value the value to cast
-     * @param type the class to cast to
-     * @return the object of the requested type
-     *
-     * @throws ClassCastException if the casting failed
-     */
-    public static @NotNull Object castTo(@NotNull LuaValue value, @NotNull Class<?> type) {
-        if (type.isArray()) {
-            if (value.isnil()) return Array.newInstance(type.getComponentType(), 0);
-            if (!isArray(value)) throw new ClassCastException("Cannot cast " + value + " (" + value.typename() + ") to " + type);
-            LuaValue[] values = toArray(value.checktable());
-            Object[] arr = (Object[]) Array.newInstance(type.getComponentType(), values.length);
-            for (int i = 0; i < values.length; i++) {
-                if (values[i] == null) continue;
-                arr[i] = castTo(values[i], type.getComponentType());
-            }
-            return arr;
+    private static Object createInstance(Class<?> clazz) {
+        Constructor<?> constructor = findConstructor(clazz);
+        try {
+            return constructor.newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+    }
 
-        if (type.isEnum()) {
-            if (value.isstring()) {
-                String name = value.checkjstring();
-                for (Object enumConstant : type.getEnumConstants()) {
-                    if (enumConstant.toString().equals(name)) return enumConstant;
-                }
-            }
-            throw new ClassCastException("Cannot cast " + value + " (" + value.typename() + ") to " + type);
+    private static void set(Object obj, String fieldName, Object value) {
+        try {
+            Field field = obj.getClass().getDeclaredField(fieldName);
+            field.setAccessible(true);
+            field.set(obj, value);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
         }
+    }
 
-        if (type.isAnnotationPresent(ACastable.class)) {
-            try {
-                return createObject(value, type);
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                throw new ClassCastException("Unable to cast '" + value + "'(" + value.typename() + ") to " + type + ": " + e.getMessage());
-            }
+    private static Class<?> getFieldType(Class<?> clazz, String fieldName) {
+        try {
+            Field field = clazz.getDeclaredField(fieldName);
+            return field.getType();
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
         }
-        else if (type.isInstance(value)) return value;
-        else if (type == Integer.class && value.isint()) return value.checkint();
-        else if (type == Double.class && value.isnumber()) return value.checkdouble();
-        else if (type == Long.class && value.isnumber()) return value.checklong();
-        else if (type == Boolean.class && value.isboolean()) return value.checkboolean();
-        else if (type == String.class && value.isstring()) return value.checkjstring();
+    }
 
-        throw new ClassCastException("Cannot cast " + value + " (" + value.typename() + ") to " + type);
+    private static interface ValueMappingFunction {
+        @NotNull Object map(@NotNull LuaValue value);
+    }
+
+    private static final HashMap<String, ValueMappingFunction> valueMappings = new HashMap<>() {{
+        put(Integer.class.getName(), LuaValue::checkint);
+        put(String.class.getName(), LuaValue::checkjstring);
+        put(Boolean.class.getName(), LuaValue::checkboolean);
+        put(Double.class.getName(), LuaValue::checkdouble);
+        put(Long.class.getName(), LuaValue::checklong);
+        put(Float.class.getName(), (value)->(float) value.checkdouble());
+        put(Byte.class.getName(), (value)->(byte) value.checkint());
+        put(Short.class.getName(), (value)->(short) value.checkint());
+        put(Character.class.getName(), (value)->(char) value.checkint());
+        put("int", LuaValue::checkint);
+        put("boolean", LuaValue::checkboolean);
+        put("double", LuaValue::checkdouble);
+        put("long", LuaValue::checklong);
+        put("float", (value)->(float) value.checkdouble());
+        put("byte", (value)->(byte) value.checkint());
+        put("short", (value)->(short) value.checkint());
+        put("char", (value)->(char) value.checkint());
+    }};
+
+    private static @NotNull Object createArrayFrom(Class<?> clazz, LuaValue value) {
+        LuaValue[] values = toArray(value.checktable());
+        Object[] arr = (Object[]) Array.newInstance(clazz, values.length);
+        for (int i = 0; i < values.length; i++) {
+            if (values[i] == null) continue;
+            arr[i] = createFrom(clazz, values[i]);
+        }
+        return arr;
+    }
+
+    private static @NotNull Object createFromTable(Class<?> clazz, LuaTable tbl) {
+        Object obj = createInstance(clazz);
+        for (LuaValue key : tbl.keys()) {
+            if (!key.isstring()) continue;
+            String name = key.checkjstring();
+            Class<?> fieldType = getFieldType(clazz, name);
+            Object value = createFrom(fieldType, tbl.get(key));
+            set(obj, name, value);
+        }
+        return obj;
+    }
+
+    public static @NotNull Object createFrom(Class<?> clazz, LuaValue value) {
+        if (valueMappings.containsKey(clazz.getName()))
+            return valueMappings.get(clazz.getName()).map(value);
+
+        if (clazz.isArray())
+            return createArrayFrom(clazz.getComponentType(), value);
+
+        if (!value.istable())
+            throw new ClassCastException("Failed to cast " + value + " to " + clazz + ": Value is not a table");
+
+        LuaTable tbl = value.checktable();
+        return createFromTable(clazz, tbl);
     }
 
     /**
@@ -210,45 +217,5 @@ public class Value {
         List<LuaValue> values = new ArrayList<>();
         for (Object object : objects) values.add(of(object));
         return LuaValue.varargsOf(values.toArray(new LuaValue[0]));
-    }
-
-    /**
-     * Converts the given LuaValue into an object
-     * @param value the value to convert
-     * @return the resulting object
-     *
-     * @throws IllegalArgumentException if the object could not be converted
-     */
-    public static @NotNull Object toObject(@NotNull LuaValue value) {
-        if (value.isstring()) return value.checkjstring();
-        else if (value.isnumber()) {
-            double d = value.checkdouble();
-            if (Math.floor(d) == d) return (long) d;
-            return d;
-        }
-        else if (value.isboolean()) return value.checkboolean();
-        throw new IllegalArgumentException("Cannot convert " + value + " (" + value.type() + ") to an object.");
-    }
-
-    /**
-     * Converts the given Method into a lua vararg function.
-     * @param method the method to convert
-     * @return the created function
-     */
-    public static VarArgFunction luaFunction(Method method) {
-        return new VarArgFunction() {
-            @Override
-            public Varargs invoke(Varargs varargs) {
-                Object[] params = new Object[varargs.narg()];
-                for (int i = 0; i < varargs.narg(); i++)
-                    params[i] = toObject(varargs.arg(i + 1));
-                try {
-                    Object ret = method.invoke(null, params);
-                    return varargs(ret);
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        };
     }
 }

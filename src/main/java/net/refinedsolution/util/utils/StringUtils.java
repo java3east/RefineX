@@ -1,9 +1,9 @@
-package net.refinedsolution.util;
+package net.refinedsolution.util.utils;
 
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Utility class for string operations.
+ * This class provides static string manipulation methods.
  * @author Java3east
  */
 public class StringUtils {
@@ -13,7 +13,7 @@ public class StringUtils {
      * @param length the length to be fixed to
      * @return the fixed length string
      */
-    public static @NotNull String fixedLength(String str, int length) {
+    public static @NotNull String fixedLength(@NotNull String str, int length) {
         if (str.length() > length) {
             return str.substring(0, length);
         } else if (str.length() < length) {
@@ -32,7 +32,7 @@ public class StringUtils {
      * @param length the length to be fixed to
      * @return the fixed length string
      */
-    public static @NotNull String fixedXLength(String str, int length) {
+    public static @NotNull String fixedXLength(@NotNull String str, int length) {
         float multiple = (float) str.length() / length;
         if (multiple > (int) multiple) {
             int newLength = (int) (multiple + 1) * length;

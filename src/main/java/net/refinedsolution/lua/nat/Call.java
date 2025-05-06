@@ -1,6 +1,6 @@
 package net.refinedsolution.lua.nat;
 
-import net.refinedsolution.lua.Runner;
+import net.refinedsolution.lua.LuaInterface;
 import net.refinedsolution.lua.Value;
 import net.refinedsolution.util.guid.GUID;
 import org.luaj.vm2.Varargs;
@@ -22,9 +22,6 @@ public class Call extends VarArgFunction {
         long objectId = varargs.checklong(2);
         String mName = varargs.checkjstring(3);
         Varargs params = varargs.subargs(4);
-
-        Runner runner = (Runner) GUID.identify(runnerId, Runner.class);
-        Object obj = GUID.has(objectId) ? GUID.identify(objectId) : null;
-        return Value.varargs(runner.call(obj, mName, params));
+        return Value.varargs();
     }
 }

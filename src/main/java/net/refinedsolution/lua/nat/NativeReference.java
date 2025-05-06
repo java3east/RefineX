@@ -1,6 +1,6 @@
 package net.refinedsolution.lua.nat;
 
-import net.refinedsolution.lua.Runner;
+import net.refinedsolution.lua.LuaInterface;
 
 import net.refinedsolution.lua.Value;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +20,7 @@ public class NativeReference {
      * @param name the name of the function to find
      * @return true if the function exists
      */
-    public static boolean find(@NotNull Runner runner, @NotNull String name) {
+    public static boolean find(@NotNull LuaInterface runner, @NotNull String name) {
         for (Class<?> clazz : runner.getNamespaces()) {
             for (Method method : clazz.getMethods()) {
                 if (method.getName().equals(name) && method.isAnnotationPresent(Native.class))
@@ -37,13 +37,13 @@ public class NativeReference {
             if (lparams.length > i - 1) {
                 lparam = lparams[i - 1];
             }
-            Object o = Value.castTo(lparam, types[i]);
+            Object o = Value.createFrom(types[1], lparam);
             results[i] = o;
         }
         return results;
     }
 
-    private static @NotNull LuaValue call(@NotNull Method method, @NotNull Runner runner, @NotNull LuaValue[] args)
+    private static @NotNull LuaValue call(@NotNull Method method, @NotNull LuaInterface runner, @NotNull LuaValue[] args)
             throws InvocationTargetException, IllegalAccessException {
         Class<?>[] parameterTypes = method.getParameterTypes();
         Object[] parameters = cast(args, parameterTypes);
@@ -61,7 +61,7 @@ public class NativeReference {
      * @param args the arguments to use
      * @return the Return values
      */
-    public static @NotNull LuaValue call(@NotNull Runner runner, @NotNull String name, @NotNull LuaValue[] args) {
+    public static @NotNull LuaValue call(@NotNull LuaInterface runner, @NotNull String name, @NotNull LuaValue[] args) {
         for (Class<?> namespace : runner.getNamespaces()) {
             for (Method method : namespace.getMethods()) {
                 if (method.getName().equals(name) && method.isAnnotationPresent(Native.class)) {

@@ -5,6 +5,11 @@ import net.refinedsolution.lua.castable.CInt;
 import net.refinedsolution.lua.castable.CString;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * A trace entry allows to store a file and a line number, related to errors, warnings
+ * or other issues.
+ * @author Java3east
+ */
 @ACastable
 public class TraceEntry {
     private String file;

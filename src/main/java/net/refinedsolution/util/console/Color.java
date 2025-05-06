@@ -1,4 +1,4 @@
-package net.refinedsolution.util;
+package net.refinedsolution.util.console;
 
 /**
  * A color enum for the console.

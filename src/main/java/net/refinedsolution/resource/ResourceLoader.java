@@ -1,5 +1,6 @@
 package net.refinedsolution.resource;
 
+import net.refinedsolution.lua.LuaInterface;
 import net.refinedsolution.simulation.Simulator;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,6 +22,7 @@ public interface ResourceLoader {
      * Starts the given resource for the given simulator
      * @param simulator the simulator to start the resource for
      * @param resource the resource to start
+     * @return the runner that got created
      */
-    void start(@NotNull Simulator simulator, @NotNull Resource resource);
+    @NotNull LuaInterface start(@NotNull Simulator simulator, @NotNull Resource resource);
 }

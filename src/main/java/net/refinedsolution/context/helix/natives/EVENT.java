@@ -1,6 +1,6 @@
 package net.refinedsolution.context.helix.natives;
 
-import net.refinedsolution.lua.Runner;
+import net.refinedsolution.lua.LuaInterface;
 import net.refinedsolution.lua.Value;
 import net.refinedsolution.lua.castable.CCastable;
 import net.refinedsolution.lua.castable.CInt;
@@ -8,8 +8,8 @@ import net.refinedsolution.lua.castable.CString;
 import net.refinedsolution.lua.nat.Native;
 import net.refinedsolution.simulation.Event;
 import net.refinedsolution.simulation.EventImpl;
-import net.refinedsolution.util.issue.IssueImpl;
-import net.refinedsolution.util.issue.IssueLevel;
+import net.refinedsolution.util.issue.Issue;
+import net.refinedsolution.util.issue.Severity;
 import net.refinedsolution.util.issue.TraceEntry;
 import org.luaj.vm2.LuaTable;
 
@@ -19,7 +19,7 @@ import org.luaj.vm2.LuaTable;
  */
 public class EVENT {
     @Native
-    public static void REFX_CALL_REMOTE(Runner runner, CString name, CInt source, CInt target, CCastable<?>[] parameters) {
+    public static void REFX_CALL_REMOTE(LuaInterface runner, CString name, CInt source, CInt target, CCastable<?>[] parameters) {
         CCastable<?>[] newParams = new CCastable<?>[parameters.length + 1];
         newParams[0] = source;
         System.arraycopy(parameters, 0, newParams, 1, parameters.length);
@@ -47,28 +47,10 @@ public class EVENT {
                 }
             }
         }
-
-        if (!ok) {
-            LuaTable info = (LuaTable) runner.getGlobals().get("debug").get("getinfo")
-                    .call(Value.of(2), Value.of("Sl"));
-            String shortSrc = info.get("short_src").checkjstring();
-            int currentLine = info.get("currentline").checkint();
-            String targetName = "CLIENT:" + target.get().toString();
-            if (source.get() != -1) targetName = "server";
-            String finalTargetName = targetName;
-            runner.getSimulator().ifPresent(sim -> sim.getSimulation().log(
-                    new IssueImpl(
-                            IssueLevel.WARNING,
-                            "Event " + name.get() + " is not registered on " + finalTargetName,
-                            sim.getSimulation().getName(), new TraceEntry[] {
-                            new TraceEntry().setFile(new CString(shortSrc)).setLine(new CInt(currentLine))
-                    }, "register the event, or wait for it to load")
-            ));
-        }
     }
 
     @Native
-    public static void REFX_CALL_LOCAL(Runner runner, CString name, CCastable<?>[] parameters) {
+    public static void REFX_CALL_LOCAL(LuaInterface runner, CString name, CCastable<?>[] parameters) {
         Event event = new EventImpl().setName(name).setSource(0).setDestination(0).setData(parameters).setNetworked(false);
         runner.getSimulator().ifPresent(simulator -> simulator.dispatchEvent(event));
     }

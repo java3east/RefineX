@@ -13,7 +13,7 @@ import java.util.Optional;
  * A simulation of a client - server environment.
  * @author Java3east
  */
-public interface Simulation extends GUIDHolder {
+public interface Simulation {
     /**
      * Returns the server of this environment
      * @return the server of this environment

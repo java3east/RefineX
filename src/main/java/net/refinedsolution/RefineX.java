@@ -1,27 +1,26 @@
 package net.refinedsolution;
 
 import net.refinedsolution.context.refex.natives.TEST;
-import net.refinedsolution.lua.RunnerImpl;
+import net.refinedsolution.lua.LuaInterfaceImpl;
 import net.refinedsolution.context.refex.natives.SIM;
+import net.refinedsolution.lua.Value;
 import net.refinedsolution.util.async.ThreadObserver;
 import net.refinedsolution.util.async.ThreadObserverImpl;
+import org.luaj.vm2.LuaTable;
 
 import java.io.File;
 
 /**
- * Main entry point for RefineX
+ * This class handles the initialization of the program.
+ * It provides an observer for all the threads that need to finish before the program exits, and handles
+ * the entry point.
  * @author Java3east
  */
 public class RefineX {
-    private static final ThreadObserver observer = new ThreadObserverImpl();
-
     /**
-     * Adds a new Observer to the list of observers that have to finish before the program exits.
-     * @param observer the observer to add
+     * An Observer for all the threads, that need to finish before the program exists.
      */
-    public static void observe(ThreadObserver observer) {
-        observer.observe(observer);
-    }
+    private static final ThreadObserver observer = new ThreadObserverImpl();
 
     public static void main(String[] args) {
         if (args.length == 0) {
@@ -36,7 +35,7 @@ public class RefineX {
             return;
         }
 
-        RunnerImpl runner = new RunnerImpl();
+        LuaInterfaceImpl runner = new LuaInterfaceImpl();
         runner.addNamespace(SIM.class);
         runner.addNamespace(TEST.class);
         runner.loadFile("./lib/native.lua");

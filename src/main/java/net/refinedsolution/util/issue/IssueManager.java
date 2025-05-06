@@ -14,15 +14,15 @@ import java.util.stream.Stream;
  * @author Java3east
  */
 public class IssueManager implements  IssueLog, IssueLogger {
-    private final Optional<IssueManager> parent;
+    private final IssueManager parent;
     private final List<Issue> issues = new ArrayList<>();
 
-    public IssueManager(@Nullable IssueManager parent) {
-        this.parent = Optional.ofNullable(parent);
+    public IssueManager(@NotNull IssueManager parent) {
+        this.parent = parent;
     }
 
     public IssueManager() {
-        this(null);
+        this(new EmptyIssueManager());
     }
 
     @Override
@@ -38,6 +38,6 @@ public class IssueManager implements  IssueLog, IssueLogger {
     @Override
     public void log(@NotNull Issue issue) {
         issues.add(issue);
-        parent.ifPresent(parent -> parent.log(issue));
+        parent.log(issue);
     }
 }

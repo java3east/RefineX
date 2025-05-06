@@ -24,7 +24,7 @@ import java.util.Optional;
  * This class implements the Runner interface and provides methods to load Lua scripts and call Lua functions.
  * @author Java3east
  */
-public class RunnerImpl implements Runner {
+public class LuaInterfaceImpl implements LuaInterface {
 
     private GUID guid;
     private final Globals globals;
@@ -36,7 +36,7 @@ public class RunnerImpl implements Runner {
     /**
      * Creates a new default runner.
      */
-    public RunnerImpl() {
+    public LuaInterfaceImpl() {
         GUID.register(this);
         this.globals = JsePlatform.debugGlobals();
         this.globals.set("REFX_ID", guid.lua());
@@ -47,7 +47,7 @@ public class RunnerImpl implements Runner {
         RefineX.observe(this);
     }
 
-    public RunnerImpl(@NotNull Simulator simulator) {
+    public LuaInterfaceImpl(@NotNull Simulator simulator) {
         GUID.register(this);
         this.globals = JsePlatform.debugGlobals();
         this.globals.set("REFX_ID", guid.lua());
@@ -66,15 +66,6 @@ public class RunnerImpl implements Runner {
         namespaces.add(namespace);
     }
 
-    @Override
-    public @NotNull Globals getGlobals() {
-        return this.globals;
-    }
-
-    @Override
-    public void loadStr(@NotNull String string) {
-        this.globals.load(string).call();
-    }
 
     @Override
     public void loadFile(@NotNull String filename) {
@@ -82,22 +73,8 @@ public class RunnerImpl implements Runner {
     }
 
     @Override
-    public @NotNull File getLocalDirectory() {
-        return this.directory;
-    }
-
-    @Override
     public @NotNull List<Class<?>> getNamespaces() {
         return namespaces;
-    }
-
-    @Override
-    public @NotNull LuaValue call(@Nullable Object o, @NotNull String mName, @NotNull Varargs varargs) {
-        LuaValue[] vals = new LuaValue[varargs.narg()];
-        for (int i = 0; i < vals.length; i++) {
-            vals[i] = varargs.arg(i + 1);
-        }
-        return NativeReference.call(this, mName, vals);
     }
 
     @Override

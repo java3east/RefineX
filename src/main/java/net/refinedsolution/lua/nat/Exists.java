@@ -1,6 +1,6 @@
 package net.refinedsolution.lua.nat;
 
-import net.refinedsolution.lua.Runner;
+import net.refinedsolution.lua.LuaInterface;
 import net.refinedsolution.lua.Value;
 import net.refinedsolution.util.guid.GUID;
 import org.luaj.vm2.Varargs;
@@ -17,8 +17,8 @@ public class Exists extends VarArgFunction {
         if (varargs.narg() != 2)
             throw new IllegalArgumentException("expected 2 arguments to 'NativeExists' but got " + varargs.narg());
 
-        GUID guid = (GUID) Value.castTo(varargs.arg(1), GUID.class);
-        Runner runner = (Runner) GUID.get(guid, Runner.class);
+        GUID guid = (GUID) Value.createFrom(GUID.class, varargs.arg(1));
+        LuaInterface runner = (LuaInterface) GUID.get(guid, LuaInterface.class);
         String natName = varargs.checkjstring(2);
         return Value.varargs(NativeReference.find(runner, natName));
     }

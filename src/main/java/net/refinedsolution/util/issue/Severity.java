@@ -1,12 +1,12 @@
 package net.refinedsolution.util.issue;
 
-import net.refinedsolution.util.Color;
+import net.refinedsolution.util.console.Color;
 
 /**
  * The IssueLevel enum represents the severity level of an issue.
  * @author Java3east
  */
-public enum IssueLevel {
+public enum Severity {
     /**
      * Errors are critical issues that stopped the simulation / tick.
      * Their message is usually the message of the exception that was thrown.
@@ -29,7 +29,7 @@ public enum IssueLevel {
 ;
     private final Color color;
 
-    IssueLevel(Color color) {
+    Severity(Color color) {
         this.color = color;
     }
 

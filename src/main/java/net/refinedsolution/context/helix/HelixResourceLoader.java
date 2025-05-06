@@ -1,25 +1,17 @@
 package net.refinedsolution.context.helix;
 
-import net.refinedsolution.RefineX;
 import net.refinedsolution.context.helix.natives.EVENT;
 import net.refinedsolution.context.refex.natives.REFX;
 import net.refinedsolution.context.refex.natives.TEST;
-import net.refinedsolution.lua.RunnerImpl;
+import net.refinedsolution.lua.LuaInterface;
+import net.refinedsolution.lua.LuaInterfaceImpl;
 import net.refinedsolution.lua.castable.CInt;
-import net.refinedsolution.lua.castable.CString;
 import net.refinedsolution.resource.Resource;
 import net.refinedsolution.resource.ResourceImpl;
 import net.refinedsolution.resource.ResourceLoader;
 import net.refinedsolution.simulation.Client;
 import net.refinedsolution.simulation.Simulator;
-import net.refinedsolution.util.Marker;
-import net.refinedsolution.util.file.TempFileManager;
-import net.refinedsolution.util.issue.TraceEntry;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Random;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Loads a HELIX resource.
@@ -36,12 +28,11 @@ public class HelixResourceLoader implements ResourceLoader {
     }
 
     @Override
-    public void start(@NotNull Simulator simulator, @NotNull Resource resource) {
-        RunnerImpl runner = new RunnerImpl(simulator);
-        simulator.addResource(resource, runner);
-        runner.addNamespace(REFX.class);
-        runner.addNamespace(EVENT.class);
-        runner.addNamespace(TEST.class);
+    public @NotNull LuaInterface start(@NotNull Simulator simulator, @NotNull Resource resource) {
+        LuaInterfaceImpl luaInterface = new LuaInterfaceImpl(simulator);
+        luaInterface.addNamespace(REFX.class);
+        luaInterface.addNamespace(EVENT.class);
+        luaInterface.addNamespace(TEST.class);
         String[] libraries;
         boolean isClient = false;
         if (simulator instanceof Client) {
@@ -52,34 +43,19 @@ public class HelixResourceLoader implements ResourceLoader {
         }
 
         for (String library : libraries) {
-            runner.loadFile(library);
+            luaInterface.loadFile(library);
         }
 
 
         String path = "/Server/Index.lua";
         if (isClient) path = "/Client/Index.lua";
 
-        CInt clId = new CInt(-1);
-        if (simulator instanceof Client client) {
-            clId = new CInt(client.getClientId());
-        }
+        luaInterface.loadFile("lib/override.lua");
+        luaInterface.loadFile("lib/native.lua");
 
-        runner.getGlobals().set("REFX_CLIENT_ID", clId.lua());
-        runner.getGlobals().set("REFX_RESOURCE_PATH", resource.getLocation().getPath());
-
-        runner.loadFile("lib/override.lua");
-        runner.loadFile("lib/native.lua");
-
-
-        TempFileManager.ModifierFunction modifier = (str, file) -> {
-            return str;
-        };
         String file = resource.getLocation().getPath() + "/Shared/Index.lua";
-
-        TempFileManager.fromFile(file, modifier)
-                .ifPresent(runner::loadFile);
-        file = resource.getLocation().getPath() + path;
-        TempFileManager.fromFile(file, modifier)
-                .ifPresent(runner::loadFile);
+        luaInterface.loadFile(file);
+        luaInterface.loadFile(resource.getLocation().getPath() + path);
+        return luaInterface;
     }
 }
