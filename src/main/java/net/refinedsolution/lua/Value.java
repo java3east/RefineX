@@ -1,12 +1,12 @@
 package net.refinedsolution.lua;
 
-import net.refinedsolution.lua.castable.CCastable;
-import net.refinedsolution.util.issue.TraceEntry;
+import net.refinedsolution.lua.castable.CFunction;
+import net.refinedsolution.lua.castable.ICastable;
+import net.refinedsolution.util.utils.ReflectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.Varargs;
-import org.luaj.vm2.lib.VarArgFunction;
 
 import java.lang.reflect.*;
 import java.util.*;
@@ -16,8 +16,6 @@ import java.util.*;
  * @author Java3east
  */
 public class Value {
-    public static final HashMap<Class<? extends LuaValue>, Class<? extends CCastable<?>>> castables = new HashMap<>();
-
     /**
      * Converts an object into a LuaValue
      * @param object the object to convert
@@ -45,33 +43,8 @@ public class Value {
             }
             return table;
         }
-        else if (object.getClass().isAnnotationPresent(ACastable.class)) {
-            ACastable castable = object.getClass().getAnnotation(ACastable.class);
-            if (castable.isDirect()) {
-                for (Method method : object.getClass().getDeclaredMethods())
-                    if (method.isAnnotationPresent(ACastable.PackField.class)) {
-                        try {
-                            return (LuaValue) method.invoke(object);
-                        } catch (IllegalAccessException | InvocationTargetException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                throw new ClassCastException("Castable " + object.getClass().getName() + " is marked direct, but has no direct conversion.");
-            }
-
-
-            LuaTable tbl = new LuaTable();
-            for (Method method : object.getClass().getDeclaredMethods()) {
-                if (method.isAnnotationPresent(ACastable.PackField.class)) {
-                    String name = method.getAnnotation(ACastable.PackField.class).name();
-                    try {
-                        tbl.set(name, of(method.invoke(object)));
-                    } catch (IllegalAccessException | InvocationTargetException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            }
-            return tbl;
+        else if (object instanceof ICastable castable) {
+            return castable.lua();
         }
         return LuaValue.NIL;
     }
@@ -112,42 +85,6 @@ public class Value {
         return values;
     }
 
-    private static Constructor<?> findConstructor(Class<?> clazz) {
-        try {
-            return clazz.getConstructor();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static Object createInstance(Class<?> clazz) {
-        Constructor<?> constructor = findConstructor(clazz);
-        try {
-            return constructor.newInstance();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static void set(Object obj, String fieldName, Object value) {
-        try {
-            Field field = obj.getClass().getDeclaredField(fieldName);
-            field.setAccessible(true);
-            field.set(obj, value);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static Class<?> getFieldType(Class<?> clazz, String fieldName) {
-        try {
-            Field field = clazz.getDeclaredField(fieldName);
-            return field.getType();
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     private static interface ValueMappingFunction {
         @NotNull Object map(@NotNull LuaValue value);
     }
@@ -162,6 +99,7 @@ public class Value {
         put(Byte.class.getName(), (value)->(byte) value.checkint());
         put(Short.class.getName(), (value)->(short) value.checkint());
         put(Character.class.getName(), (value)->(char) value.checkint());
+        put(CFunction.class.getName(), CFunction::new);
         put("int", LuaValue::checkint);
         put("boolean", LuaValue::checkboolean);
         put("double", LuaValue::checkdouble);
@@ -183,13 +121,13 @@ public class Value {
     }
 
     private static @NotNull Object createFromTable(Class<?> clazz, LuaTable tbl) {
-        Object obj = createInstance(clazz);
+        Object obj = ReflectionUtils.createInstance(clazz);
         for (LuaValue key : tbl.keys()) {
             if (!key.isstring()) continue;
             String name = key.checkjstring();
-            Class<?> fieldType = getFieldType(clazz, name);
+            Class<?> fieldType = ReflectionUtils.getFieldType(clazz, name);
             Object value = createFrom(fieldType, tbl.get(key));
-            set(obj, name, value);
+            ReflectionUtils.set(obj, name, value);
         }
         return obj;
     }

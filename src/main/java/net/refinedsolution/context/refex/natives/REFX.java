@@ -1,12 +1,10 @@
 package net.refinedsolution.context.refex.natives;
 
 import net.refinedsolution.lua.LuaInterface;
-import net.refinedsolution.lua.castable.CString;
 import net.refinedsolution.lua.nat.Native;
 import net.refinedsolution.simulation.Client;
 import net.refinedsolution.util.console.Color;
 import net.refinedsolution.util.utils.StringUtils;
-import net.refinedsolution.util.issue.Issue;
 import net.refinedsolution.util.issue.Severity;
 import net.refinedsolution.util.issue.TraceEntry;
 
@@ -16,10 +14,10 @@ import net.refinedsolution.util.issue.TraceEntry;
  */
 public class REFX {
     @Native
-    public static void REFX_PRINT(LuaInterface runner, CString[] args) {
+    public static void REFX_PRINT(LuaInterface runner, String[] args) {
         StringBuilder sb = new StringBuilder();
-        for (CString arg : args) {
-            sb.append(arg.get()).append(" ");
+        for (String arg : args) {
+            sb.append(arg).append(" ");
         }
 
         String simName = runner.getSimulator().isPresent() ?
@@ -36,7 +34,7 @@ public class REFX {
     }
 
     @Native
-    public static void REFX_ERROR(LuaInterface runner, Severity level, CString msg, CString fix, TraceEntry[] trace) {
+    public static void REFX_ERROR(LuaInterface runner, Severity level, String msg, String fix, TraceEntry[] trace) {
         // TODO
     }
 }

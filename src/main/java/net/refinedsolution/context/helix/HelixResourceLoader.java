@@ -5,7 +5,6 @@ import net.refinedsolution.context.refex.natives.REFX;
 import net.refinedsolution.context.refex.natives.TEST;
 import net.refinedsolution.lua.LuaInterface;
 import net.refinedsolution.lua.LuaInterfaceImpl;
-import net.refinedsolution.lua.castable.CInt;
 import net.refinedsolution.resource.Resource;
 import net.refinedsolution.resource.ResourceImpl;
 import net.refinedsolution.resource.ResourceLoader;

@@ -44,7 +44,6 @@ public class LuaInterfaceImpl implements LuaInterface {
         this.globals.set("REFX_CALL", new Call());
         this.directory = new File(System.getProperty("user.dir"));
         this.simulator = Optional.empty();
-        RefineX.observe(this);
     }
 
     public LuaInterfaceImpl(@NotNull Simulator simulator) {
@@ -55,7 +54,6 @@ public class LuaInterfaceImpl implements LuaInterface {
         this.globals.set("REFX_CALL", new Call());
         this.directory = new File(System.getProperty("user.dir"));
         this.simulator = Optional.of(simulator);
-        RefineX.observe(this);
     }
 
     /**
@@ -95,11 +93,6 @@ public class LuaInterfaceImpl implements LuaInterface {
     @Override
     public void await() {
         this.observer.await();
-    }
-
-    @Override
-    public void setGUID(@NotNull GUID guid) {
-
     }
 
     @Override

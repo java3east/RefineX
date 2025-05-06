@@ -1,23 +1,20 @@
 package net.refinedsolution.util.guid;
 
-import net.refinedsolution.lua.ACastable;
-import net.refinedsolution.lua.castable.CCastable;
+import net.refinedsolution.lua.castable.ICastable;
+import net.refinedsolution.util.utils.ReflectionUtils;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.luaj.vm2.LuaInteger;
+import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.Optional;
+import java.util.Objects;
 
 /**
  * Global Unique Identifiers (GUID) are used to uniquely identify objects throughout the java - lua bridge, allowing
  * to refer to java objects in lua scripts.
  * @author Java3east
  */
-@ACastable(isDirect = true, castType = LuaInteger.class)
-public class GUID extends CCastable<Long> {
+public class GUID  implements ICastable {
     private static long nextId = 0;
     private static final HashMap<GUID, GUIDHolder> idMap = new HashMap<>();
 
@@ -27,9 +24,9 @@ public class GUID extends CCastable<Long> {
      * @param guidHolder the GUID holder to register
      */
     public static void register(@NotNull GUIDHolder guidHolder) {
-        GUID guid = new GUID();
+        GUID guid = new GUID(true);
         idMap.put(guid, guidHolder);
-        guidHolder.setGUID(guid);
+        ReflectionUtils.set(guidHolder, "guid", guid);
     }
 
     /**
@@ -40,7 +37,9 @@ public class GUID extends CCastable<Long> {
      */
     public static @NotNull GUIDHolder get(@NotNull GUID guid) {
         GUIDHolder holder = idMap.get(guid);
-        return holder == null ? new EmptyGUIDHolder() : holder;
+        if (holder == null)
+            throw new NullPointerException("No such guid: " + guid);
+        return holder;
     }
 
     /**
@@ -52,40 +51,44 @@ public class GUID extends CCastable<Long> {
     public static GUIDHolder get(@NotNull GUID guid, @NotNull Class<? extends GUIDHolder> type) {
         GUIDHolder holder = idMap.get(guid);
         if (holder != null) return holder;
-        try {
-            Method m = type.getDeclaredMethod("empty");
-            Object o = m.invoke(null);
-            if (o instanceof GUIDHolder) {
-                return (GUIDHolder) o;
-            }
-        } catch (Exception ignored) { }
-        return null;
+        throw new IllegalArgumentException("No such guid: " + guid);
     }
 
-    public GUID(@NotNull LuaValue value) {
-        super(value);
+    private long id;
+
+    public GUID(boolean _new) {
+        this.id = ++nextId;
     }
 
-    public GUID(@Nullable Long value) {
-        super(value);
-    }
+    public GUID() {}
 
-     GUID() {
-        super(nextId++);
-     }
-
-    @Override
-    protected @NotNull Long from(@NotNull LuaValue val) {
-        return val.checklong();
-    }
-
-    @Override
-    public String toString() {
-        return String.format("GUID:%d", super.get());
+    public long getId() {
+        return id;
     }
 
     @Override
     public LuaValue lua() {
-        return LuaValue.valueOf(super.get());
+        LuaTable tbl = new LuaTable();
+        tbl.set("id", id);
+        return tbl;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        GUID guid = (GUID) o;
+        return id == guid.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+
+    @Override
+    public String toString() {
+        return "GUID{" +
+                "id=" + id +
+                '}';
     }
 }

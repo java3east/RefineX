@@ -18,6 +18,7 @@ public class Exists extends VarArgFunction {
             throw new IllegalArgumentException("expected 2 arguments to 'NativeExists' but got " + varargs.narg());
 
         GUID guid = (GUID) Value.createFrom(GUID.class, varargs.arg(1));
+        System.out.println(guid);
         LuaInterface runner = (LuaInterface) GUID.get(guid, LuaInterface.class);
         String natName = varargs.checkjstring(2);
         return Value.varargs(NativeReference.find(runner, natName));
